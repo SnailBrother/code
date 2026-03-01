@@ -127,21 +127,18 @@
 .verifiedBadge {
   display: inline-flex;
   align-items: center;
-  margin-top: 12px;
-  background: #f6ffed;
-  border: 1px solid #b7eb8f;
-  color: #52c41a;
-  padding: 4px 12px;
+  margin-top: 0px;
+
+  /* border: 1px solid #b7eb8f; */
+  color: #4f504f;
+  padding: 1px;
   border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 500;
+
 }
 
-.checkIcon {
-  margin-right: 5px;
-  font-weight: 900;
-  font-size: 16px;
-}
+
 
 /* 信息网格 - 所有信息行统一样式 */
 .infoGrid {
@@ -201,21 +198,71 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 5px;
-  margin: 5px 0;
-   /* border: 1px dashed #ccc;   */
+  padding: 1px;
+  margin: 1px 0;
   border-radius: 8px;
   text-align: center;
-  min-height: 200px; /* 预留高度防止抖动 */
+  min-height: 220px;
+  /* 稍微增加高度以适应新布局 */
+
+}
+
+/* 新增：二维码包装器 (相对定位) */
+.qrWrapper {
+  position: relative;
+  width: 180px;
+  /* 显示宽度，与下面 qrImage 一致 */
+  height: 180px;
+  margin: 0 auto;
+  padding: 0px;
 }
 
 /* 新增：二维码图片样式 */
 .qrImage {
-  width: 180px;
-  height: 180px;
+  width: 100%;
+  height: 100%;
   display: block;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  /* 确保打印时颜色准确 */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* 新增：Logo 覆盖层 (绝对定位居中) */
+.qrLogoOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 45px;
+  /* Logo 容器大小，约为二维码宽度的 25% */
+  height: 45px;
+  background-color: #ffffff;
+  /* 白色背景遮挡下方的二维码点 */
+  border-radius: 4px;
+  /* 可选：圆角 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  /* 内边距让 Logo 不至于太满 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* 轻微阴影增加层次感 */
+
+  /* 打印适配 */
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  background-color: #fff !important;
+  /* 强制打印背景色 */
+}
+
+/* 新增：Logo 图片样式 */
+.logoImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* 保持比例 */
 }
 
 /* 新增：生成失败时的提示样式 */
@@ -275,7 +322,8 @@
   z-index: 2;
 }
 
-.printBtn, .backBtn {
+.printBtn,
+.backBtn {
   padding: 12px 30px;
   border: none;
   border-radius: 6px;
@@ -320,7 +368,7 @@
   background: #fff;
   padding: 40px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .spinner {
@@ -334,8 +382,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* 打印适配 */
@@ -345,22 +398,32 @@
     size: A4;
   }
 
-  body, html {
+  body,
+  html {
     background: #fff;
     height: auto;
     overflow: visible;
   }
-.qrImage {
+
+  .qrImage {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
+
   .fullPageBg {
     background: none;
     padding: 0;
     display: block;
     min-height: auto;
   }
-  
+
+  .qrLogoOverlay {
+    background-color: #fff !important;
+    /* 确保打印时有白色底 */
+    box-shadow: none;
+    /* 打印时去掉阴影更清晰 */
+  }
+
   .paperContainer {
     max-width: 100%;
     margin: 0;
@@ -377,7 +440,8 @@
     overflow: visible;
   }
 
-  .actionBar, .homeBtn {
+  .actionBar,
+  .homeBtn {
     display: none !important;
   }
 
@@ -390,14 +454,17 @@
     right: 70px;
     z-index: 1;
   }
-  
+
   .stampImage {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     mix-blend-mode: multiply;
   }
 
-  .infoGrid, .signSection, .qrSection, .footer {
+  .infoGrid,
+  .signSection,
+  .qrSection,
+  .footer {
     position: relative;
     z-index: 2;
     background: transparent;

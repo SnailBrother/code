@@ -1,19 +1,19 @@
 // src/pages/CodeCheck.jsx
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import QRCode from 'qrcode';
+// 引入 Logo 图片 (假设放在 public 文件夹下)
+
 import styles from './CodeCheck.module.css';
 
 function CodeCheck() {
   const { code } = useParams();
-  // 不再直接引用 canvas，改为存储生成的图片 URL
   const [qrImageSrc, setQrImageSrc] = useState('');
-  
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [qrUrl, setQrUrl] = useState('');
-
+const logoImg = '/RuidaLogo.jpg';
   useEffect(() => {
     const fetchData = async () => {
       if (!code) {
@@ -37,22 +37,24 @@ function CodeCheck() {
 
           // 2. 构造完整 URL
           const currentOrigin = window.location.origin;
-          // 安全检查：确保协议存在
           const fullUrl = `${currentOrigin}/codecheck/${encodeURIComponent(code)}`;
           setQrUrl(fullUrl);
 
-          console.log('正在生成二维码，目标 URL:', fullUrl);
+          console.log('正在生成带 Logo 的二维码，目标 URL:', fullUrl);
 
-          // 3. 生成二维码图片 (使用 toDataURL 替代 toCanvas 以提高兼容性)
+          // 3. 生成二维码图片
           try {
+            // 关键修改：
+            // 1. errorCorrectionLevel: 'H' (最高容错率，允许遮挡 30%)
+            // 2. width: 增大尺寸 (例如 250)，以便中间留出空间后边缘依然清晰
             const dataUrl = await QRCode.toDataURL(fullUrl, {
-              width: 180,
-              margin: 1,
+              width: 260, 
+              margin: 2,
               color: {
                 dark: '#000000',
                 light: '#ffffff'
               },
-              errorCorrectionLevel: 'M' // 中等容错率
+              errorCorrectionLevel: 'H' // 必须设为 H 以保证扫码成功率
             });
             
             if (dataUrl) {
@@ -92,7 +94,6 @@ function CodeCheck() {
   }
 
   if (error && !data) {
-    // 如果是致命错误且没有数据，显示错误页
     return (
       <div className={styles.fullPageBg}>
         <div className={`${styles.paper} ${styles.errorPaper}`}>
@@ -114,12 +115,17 @@ function CodeCheck() {
     return num.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  const formatDate = (dateStr) => {
-    if (!dateStr) return '-';
-    const date = new Date(dateStr);
-    if (isNaN(date.getTime())) return '-';
-    return date.toLocaleDateString('zh-CN');
-  };
+const formatDate = (dateStr) => {
+  if (!dateStr) return '-';
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return '-';
+  
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // getMonth() 返回 0-11
+  const day = date.getDate();
+  
+  return `${year}年${month}月${day}日`;
+};
 
   return (
     <div className={styles.fullPageBg}>
@@ -141,14 +147,18 @@ function CodeCheck() {
 
           <div className={styles.paperHeader}>
             <h1 className={styles.reportTitle}>重庆瑞达资产评估房地产土地估价有限公司</h1>
-            
           </div>
 
-          {/* 二维码区域 - 改用 img 标签显示 */}
+          {/* 二维码区域 - 修改为相对定位容器，以便绝对定位 Logo */}
           <div className={styles.qrSection}>
             {qrImageSrc ? (
-              <img src={qrImageSrc} alt="查验二维码" className={styles.qrImage} />
-              
+              <div className={styles.qrWrapper}>
+                <img src={qrImageSrc} alt="查验二维码" className={styles.qrImage} />
+                {/* 覆盖在中间的 Logo */}
+                <div className={styles.qrLogoOverlay}>
+                  <img src={logoImg} alt="Logo" className={styles.logoImage} />
+                </div>
+              </div>
             ) : (
               <div className={styles.qrError}>
                 <p>⚠️ 二维码生成中或失败</p>
@@ -156,7 +166,7 @@ function CodeCheck() {
               </div>
             )}
             <div className={styles.verifiedBadge}>
-              <span className={styles.checkIcon}></span>校验码:{code}
+             校验码:{code}
             </div>
           </div>
 
@@ -165,22 +175,18 @@ function CodeCheck() {
               <span className={styles.label}>报告编号：</span>
               <span className={styles.value}>{data.ReportNumber || '-'}</span>
             </div>
-
             <div className={styles.infoRow}>
               <span className={styles.label}>项目名称：</span>
               <span className={styles.value}>{data.ProjectName || '-'}</span>
             </div>
-
             <div className={styles.infoRow}>
               <span className={styles.label}>评估金额：</span>
               <span className={styles.value}>¥ {formatAmount(data.EvaluationAmount)}元</span>
             </div>
-
             <div className={styles.infoRow}>
               <span className={styles.label}>报告时间：</span>
               <span className={styles.value}>{formatDate(data.ReportTime)}</span>
             </div>
-
             <div className={styles.infoRow}>
               <span className={styles.label}>评估机构名称：</span>
               <span className={styles.value}>重庆瑞达资产评估房地产土地估价有限公司</span>
@@ -194,7 +200,6 @@ function CodeCheck() {
                 {data.SignerA_Name || '未签字'}（编号：{data.SignerA_Number || '-'}）
               </span>
             </div>
-
             <div className={styles.signRow}>
               <span className={styles.label}></span>
               <span className={styles.value}>

@@ -1,10 +1,13 @@
 // src/pages/Home.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Link } from 'react-router-dom'; // 添加这行导入Link
 import styles from './Home.module.css';
-import Music from './Homecopy'; 
-import HomePage from './Homecopy'; 
-import GalleryPage from './Homecopy'; 
-import ProfilePage from './Homecopy'; 
+import Dynamic from './home/Dynamic'; 
+import Partner from './home/Partner'; 
+import ContactUs from './home/ContactUs'; 
+import CompanyProfile from './home/CompanyProfile'; 
+import Recruitment from './home/Recruitment'; 
+import Footer from './home/Footer'; 
 
 const HomeOptions = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -13,8 +16,11 @@ const HomeOptions = () => {
   const touchStartY = useRef(0);
   
   // 导航项 - 对应每个页面
-  const navItems = ['音乐', '记账', '办公', '聊天', '旅游', '系统', '穿搭', '小工具'];
-  const totalPages = 8; // 总共8个页面
+  const navItems = ['关于我们', '合作伙伴', '公司动态','联系我们','人材招聘'];
+  const totalPages = 6; // 总共8个页面
+  
+  // logo图片路径
+  const logoImg = '/RuidaLogo.jpg';
   
   // 翻页到指定页面
   const goToPage = useCallback((pageIndex) => {
@@ -145,7 +151,14 @@ const HomeOptions = () => {
         <div className={styles.page}>
           {/* 只在第一页显示的导航栏 */}
           <nav className={styles.navBar}>
-            <div className={styles.navContent}>
+            {/* 左侧：Logo和公司名称 */}
+            <div className={styles.navLeft}>
+              <img src={logoImg} alt="公司Logo" className={styles.navLogo} />
+              <span className={styles.companyName}>重庆瑞达资产评估房地产土地估价有限公司</span>
+            </div>
+            
+            {/* 中间：导航菜单 */}
+            <div className={styles.navCenter}>
               {navItems.map((item, index) => (
                 <button
                   key={index}
@@ -156,67 +169,62 @@ const HomeOptions = () => {
                 </button>
               ))}
             </div>
+            
+            {/* 右侧：搜索框和登录按钮 */}
+            <div className={styles.navRight}>
+              <div className={styles.searchBox}>
+                <input 
+                  type="text" 
+                  placeholder="搜索..." 
+                  className={styles.searchInput}
+                />
+                <button className={styles.searchButton}>🔍</button>
+              </div>
+              <Link to="/login" className={styles.loginButton}>
+                登录
+              </Link>
+            </div>
           </nav>
           <div className={`${styles.pageContent} ${styles.page1}`}>
-            <ProfilePage/>
-            {/* 在这里添加音乐页面内容 */}
-         
+            <CompanyProfile/>
           </div>
         </div>
         
-        {/* 第2页 - 记账 */}
+        {/* 第2页 -合作伙伴 */}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page2}`}>
-            {/* <h2>记账</h2> */}
-            <HomePage/>
+            <Partner/>
           </div>
         </div>
         
-        {/* 第3页 - 办公 */}
+        {/* 第3页 - 公司动态 */}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page3}`}>
-            {/* <h2>办公</h2> */}
-           <Music/>  
+           <Dynamic/>  
           </div>
         </div>
         
-        {/* 第4页 - 聊天 */}
+        {/* 第4页 - 人才招聘 */}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page4}`}>
-            {/* <h2>聊天</h2> */}
-             <GalleryPage/>
+            <h2>人才招聘</h2>
+            
+              <Recruitment/>
           </div>
         </div>
         
-        {/* 第5页 - 旅游 */}
+        {/* 第5页 -  联系我们*/}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page5}`}>
-            <h2>旅游</h2>
-            {/* 在这里添加旅游页面内容 */}
+            <h2>联系我们</h2>
+            <ContactUs/>
           </div>
         </div>
-        
-        {/* 第6页 - 系统 */}
+         {/* 第6页 -  页脚*/}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page6}`}>
-            <h2>系统</h2>
-            {/* 在这里添加系统页面内容 */}
-          </div>
-        </div>
-        
-        {/* 第7页 - 穿搭 */}
-        <div className={styles.page}>
-          <div className={`${styles.pageContent} ${styles.page7}`}>
-            <h2>穿搭</h2>
-            {/* 在这里添加穿搭页面内容 */}
-          </div>
-        </div>
-        
-        {/* 第8页 - 小工具 */}
-        <div className={styles.page}>
-          <div className={`${styles.pageContent} ${styles.page8}`}>
-            <h2>小工具</h2>
-            {/* 在这里添加小工具页面内容 */}
+            
+            <Footer/>
           </div>
         </div>
       </div>

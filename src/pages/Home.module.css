@@ -18,7 +18,7 @@
   left: 0;
   width: 100%;
   height: 60px;
-  background-color: rgba(44, 43, 43, 0.527);
+  background-color: #fff;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(2px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -52,7 +52,7 @@
 }
 
 .navActive {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255, 255, 255);
   border-color: #fff;
   font-weight: bold;
 }
@@ -73,6 +73,7 @@
   justify-content: center;
   align-items: center;
   position: relative; /* 让导航栏相对于第一页定位 */
+
 }
 
 /* 页面内容区域 */
@@ -87,30 +88,35 @@
   justify-content: center;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
+.pageContent h2 {
+  color: #000; /* 纯黑色，也可以用 black 关键字 */
+  /* 可选：如果需要确保样式优先级，可加 !important */
+   color: #000 !important; 
+}
 
 /* 各页面背景色 */
 .page1 {
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  background: #fff;
   
   margin-top: 60px;
   height: calc(100dvh - 60px);
 }
 
-.page2 {
+/* .page2 {
   background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
-}
+} */
 
-.page3 {
+/* .page3 {
   background: linear-gradient(135deg, #84fab0, #8fd3f4);
-}
+} */
 
-.page4 {
+/* .page4 {
   background: linear-gradient(135deg, #d4fc79, #96e6a1);
-}
+} */
 
-.page5 {
+/* .page5 {
   background: linear-gradient(135deg, #a6c0fe, #f68084);
-}
+} */
 
 .page6 {
   background: linear-gradient(135deg, #667eea, #764ba2);
@@ -199,3 +205,226 @@
   bottom: 20px;
   right: 20px;
 }
+/* 在Home.module.css中添加以下样式 */
+
+/* 导航栏 - 三部分布局 */
+.navBar {
+  position: absolute;  
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px; /* 稍微增高一点 */
+  background-color: #ffffff; /* 改为白色背景 */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(2px);
+  border: 1px solid rgba(0, 0, 0, 0.1); /* 改为浅黑色边框 */
+  isolation: isolate;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between; /* 三部分左右分布 */
+  align-items: center;
+  padding: 0 30px;
+  box-sizing: border-box;
+}
+
+/* 左侧：Logo和公司名称 */
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1; /* 占用等比例空间 */
+}
+
+.navLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 0, 0, 0.1); /* 改为浅黑色边框 */
+}
+
+.companyName {
+  color: #333333; /* 改为深灰色文字 */
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap; /* 防止换行 */
+  text-shadow: none; /* 移除文字阴影 */
+}
+
+/* 中间：导航菜单 */
+.navCenter {
+  display: flex;
+  gap: 15px;
+  flex: 1; /* 占用等比例空间 */
+  justify-content: center;
+}
+
+.navButton {
+  margin: 0;
+  padding: 8px 20px;
+  color: #333333; /* 改为深灰色文字 */
+  background: transparent;
+  border: 0px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.navButton:hover {
+  background: rgba(0, 0, 0, 0.05); /* 浅黑色悬停效果 */
+}
+
+.navActive {
+  background: rgba(0, 0, 0, 0.1); /* 浅黑色激活效果 */
+  border-color: #333;
+  font-weight: bold;
+  color: #000000; /* 激活时文字颜色更深 */
+}
+
+/* 右侧：搜索框和登录按钮 */
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1; /* 占用等比例空间 */
+  justify-content: flex-end;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.05); /* 浅黑色背景 */
+  border-radius: 20px;
+  padding: 5px 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1); /* 浅黑色边框 */
+  transition: all 0.3s ease;
+}
+
+.searchBox:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.searchBox:focus-within {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  color: #333333; /* 深灰色文字 */
+  padding: 5px 10px;
+  font-size: 14px;
+  width: 150px;
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: rgba(0, 0, 0, 0.4); /* 浅黑色占位符文字 */
+}
+
+.searchButton {
+  background: transparent;
+  border: none;
+  color: #333333; /* 深灰色图标 */
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.searchButton:hover {
+  transform: scale(1.1);
+}
+
+.loginButton {
+  padding: 8px 20px;
+  background: rgba(0, 0, 0, 0.05); /* 浅黑色背景 */
+  color: #333333; /* 深灰色文字 */
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.1); /* 浅黑色边框 */
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.loginButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* 响应式设计 - 小屏幕调整 */
+@media (max-width: 1200px) {
+  .navBar {
+    padding: 0 20px;
+  }
+  
+  .companyName {
+    font-size: 14px;
+  }
+  
+  .searchInput {
+    width: 120px;
+  }
+}
+
+@media (max-width: 992px) {
+  .navBar {
+    padding: 0 15px;
+  }
+  
+  .companyName {
+    display: none; /* 在中等屏幕上隐藏公司名称，只保留Logo */
+  }
+  
+  .navButton {
+    padding: 8px 15px;
+    font-size: 13px;
+  }
+  
+  .searchInput {
+    width: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navBar {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px;
+  }
+  
+  .navLeft, .navCenter, .navRight {
+    flex: auto;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .navCenter {
+    order: 3;
+    margin-top: 10px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+  }
+  
+  .navRight {
+    order: 2;
+    justify-content: flex-end;
+  }
+  
+  .navLeft {
+    order: 1;
+    justify-content: flex-start;
+  }
+}
+
+/* 原有样式保持不变... */

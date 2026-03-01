@@ -1,0 +1,83 @@
+/* ContactUs.module.css */
+.contactSection {
+  width: 100%;
+  background-color: #ffffff; /* 背景色与示例一致 */
+  color: #131212;
+  padding: 60px 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.leftCol {
+  width: 48%;
+}
+
+.contactImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 4px;
+}
+
+.rightCol {
+  width: 48%;
+  color: #000;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #000;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #1f1e1e;
+  margin-bottom: 32px;
+  text-transform: uppercase;
+}
+
+.infoList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.infoItem {
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.label {
+  color: #0c0c0c;
+  font-weight: 500;
+}
+
+.value {
+  color: #141414;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .leftCol,
+  .rightCol {
+    width: 100%;
+  }
+
+  .leftCol {
+    margin-bottom: 32px;
+  }
+}
