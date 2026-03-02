@@ -25,8 +25,8 @@ const ContactUs = () => {
                 <span className={styles.value}>李先生</span>
               </li>
               <li className={styles.infoItem}>
-                <span className={styles.label}>公司电话：</span>
-                <span className={styles.value}>023-45245245615</span>
+                <span className={styles.label}>电话：</span>
+                <span className={styles.value}>18983033184</span>
               </li>
               <li className={styles.infoItem}>
                 <span className={styles.label}>公司地址：</span>
@@ -34,15 +34,42 @@ const ContactUs = () => {
               </li>
               <li className={styles.infoItem}>
                 <span className={styles.label}>公司邮箱：</span>
-                <span className={styles.value}>fdgdfghq@126.com</span>
+                <span className={styles.value}>644260249@qq.com</span>
               </li>
               <li className={styles.infoItem}>
                 <span className={styles.label}>公司邮编：</span>
-                <span className={styles.value}>40000fgd0</span>
+                <span className={styles.value}>400010</span>
               </li>
               <li className={styles.infoItem}>
                 <span className={styles.label}>客服QQ：</span>
-                <span className={styles.value}>gfdgfdfdhfd5</span>
+                <span className={styles.value}>644260249</span>
+              </li>
+              {/* 新增二维码区域 - 并排显示 */}
+              <li className={styles.qrCodeItem}>
+                <div className={styles.qrCodeWrapper}>
+                  <span className={styles.qrLabel}>QQ</span>
+                  <img 
+                    src='/Picture/home/ContactUs/qq.jpg' 
+                    alt="QQ二维码" 
+                    className={styles.qrImage}
+                  />
+                </div>
+                <div className={styles.qrCodeWrapper}>
+                  <span className={styles.qrLabel}>微信</span>
+                  <img 
+                    src='/Picture/home/ContactUs/wechat.png' 
+                    alt="微信二维码" 
+                    className={styles.qrImage}
+                  />
+                </div>
+                <div className={styles.qrCodeWrapper}>
+                  <span className={styles.qrLabel}>公众号</span>
+                  <img 
+                    src='/Picture/home/ContactUs/fuwuhao.jpg' 
+                    alt="微信二维码" 
+                    className={styles.qrImage}
+                  />
+                </div>
               </li>
             </ul>
           </div>

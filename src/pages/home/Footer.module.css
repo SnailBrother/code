@@ -1,7 +1,7 @@
 /* Footer.module.css */
 .footer {
   width: 100%;
-  min-height: 100vh; /* 最小高度占满整个视口 */
+ 
   height: auto;
   background-color: #ffffff; /* 白色主色调 */
   color: #333333; /* 深灰色文字 */
@@ -11,6 +11,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-top: 1px solid #f0f0f0; /* 极浅的灰色边框 */
   box-sizing: border-box;
+    height: 100dvh;
+  overflow: hidden;
 }
 
 .footerContainer {

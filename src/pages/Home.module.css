@@ -153,7 +153,7 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.5);
+  border: 2px solid rgba(211, 208, 208, 0.5);
   background: transparent;
   cursor: pointer;
   padding: 0;
@@ -161,11 +161,11 @@
 }
 
 .indicator:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(136, 135, 135, 0.3);
 }
 
 .indicator.active {
-  background: #fff;
+  background: #656666;
   transform: scale(1.2);
 }
 
@@ -231,7 +231,7 @@
 .navLeft {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 5px;
   flex: 1; /* 占用等比例空间 */
 }
 
@@ -240,7 +240,8 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(0, 0, 0, 0.1); /* 改为浅黑色边框 */
+  /* border: 2px solid rgba(0, 0, 0, 0.1);  */
+  /* 改为浅黑色边框 */
 }
 
 .companyName {

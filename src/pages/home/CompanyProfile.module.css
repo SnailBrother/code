@@ -6,12 +6,15 @@
 
 /* 主容器 */
 .carouseltypesecond-box {
-  width: 1200px;
-  height: 800px;
+  width: 100%;
+  
   position: relative;
   /* border: 1px red solid; */
   overflow: hidden;
   border-radius: 10px;
+    height: 100dvh;
+  overflow: hidden;
+  padding: 20px;
 }
 /* #region start 标题 */
 

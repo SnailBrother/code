@@ -3,6 +3,8 @@
   background-color: #ffffff;
   color: #131212;
   padding: 60px 0;
+    height: 100dvh;
+  overflow: hidden;
 }
 
 .container {
@@ -227,5 +229,54 @@
   .formLabel {
     width: auto;
     margin-bottom: 5px;
+  }
+}
+/* 在ContactUs.module.css文件中添加以下样式 */
+
+.qrCodeItem {
+  display: flex;
+  gap: 30px;
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #ddd;
+}
+
+.qrCodeWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.qrLabel {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.qrImage {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.qrImage:hover {
+  transform: scale(1.05);
+}
+
+/* 响应式适配 - 小屏幕时二维码改为垂直排列 */
+@media (max-width: 480px) {
+  .qrCodeItem {
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  
+  .qrCodeWrapper {
+    width: 100%;
   }
 }

@@ -4,11 +4,11 @@ import styles from './Dynamic.module.css';
 const CarouselTypeThird = () => {
     // 图片源保持在组件内部
     const images = [
-        { src: '/Picture/home/Dynamic/1.jpg', description: '描述内容1' },
-        { src: '/Picture/home/Dynamic/2.jpg', description: '描述内容2' },
-        { src: '/Picture/home/Dynamic/3.jpg', description: '描述内容3' },
-        { src: '/Picture/home/Dynamic/4.jpg', description: '描述内容4' },
-        { src: '/Picture/home/Dynamic/5.jpg', description: '描述内容5' },
+        { src: '/Picture/home/Dynamic/1.jpg', description: '云南旅游' },
+        { src: '/Picture/home/Dynamic/2.jpg', description: '团队旅游' },
+        { src: '/Picture/home/Dynamic/3.jpg', description: '外出活动' },
+        { src: '/Picture/home/Dynamic/4.jpg', description: '体育赛事' },
+        { src: '/Picture/home/Dynamic/5.jpg', description: '帮扶经济' },
         { src: '/Picture/home/Dynamic/6.jpg', description: '公司十分重视与各高校合作，于2011年在重庆工商大学设立“瑞达奖学金”、2020年与重庆商务职业学院建立实习基地，深化校企合作，积极推动产、学、研结合，扩大了后备人才储备。' },
     ];
 
@@ -16,16 +16,35 @@ const CarouselTypeThird = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isHovering, setIsHovering] = useState(false);
     const timerRef = useRef(null);
+    const middleImageRef = useRef(null);
+    const [imageWidth, setImageWidth] = useState(0);
 
     // Initialize slides
     useEffect(() => {
         const initialSlides = images.map((item, index) => ({
             id: index + 1,
             src: item.src,
-            description: item.description  // 添加这一行
+            description: item.description
         }));
         setSlides(initialSlides);
     }, []);
+
+    // 监听中间图片的宽度变化
+    useEffect(() => {
+        if (middleImageRef.current) {
+            const updateWidth = () => {
+                const width = middleImageRef.current.offsetWidth;
+                setImageWidth(width);
+            };
+            
+            updateWidth();
+            window.addEventListener('resize', updateWidth);
+            
+            return () => {
+                window.removeEventListener('resize', updateWidth);
+            };
+        }
+    }, [currentIndex]);
 
     // Auto-rotate effect
     useEffect(() => {
@@ -82,10 +101,7 @@ const CarouselTypeThird = () => {
     if (slides.length === 0) return null;
 
     return (
-        <div
-            className={styles['carouseltypethird-container']}
-
-        >
+        <div className={styles['carouseltypethird-container']}>
             <div className={styles['carouseltypethird-header']}>
                 <div className={styles['carouseltypethird-title-container']}>
                     <div className={styles['carouseltypethird-title-bg']}></div>
@@ -107,6 +123,7 @@ const CarouselTypeThird = () => {
                     return (
                         <li
                             key={slide.id}
+                            ref={index === currentIndex ? middleImageRef : null}
                             className={`${styles['carouseltypethird-slide']} ${index === currentIndex ? styles['carouseltypethird-active'] : ''}`}
                             style={{
                                 zIndex: index === currentIndex ? 100 : index,
@@ -122,10 +139,15 @@ const CarouselTypeThird = () => {
                             onMouseLeave={index === currentIndex ? handleMouseLeave : undefined}
                         >
                             <img src={slide.src} alt={`banner-${slide.id}`} className={styles['carouseltypethird-img']} />
-
-                            {/* 只在中间图片显示描述 */}
+                            
+                            {/* 只在中间图片显示描述 - 固定在图片顶部 */}
                             {index === currentIndex && (
-                                <div className={styles['carouseltypethird-description']}>
+                                <div 
+                                    className={styles['carouseltypethird-description']}
+                                    style={{
+                                        width: imageWidth ? `${imageWidth}px` : '100%',
+                                    }}
+                                >
                                     {slide.description}
                                 </div>
                             )}
@@ -133,17 +155,16 @@ const CarouselTypeThird = () => {
                     );
                 })}
 
-                <div className={styles['carouseltypethird-dots']}>
-                    {slides.map((slide, index) => (
-                        <div
-                            key={slide.id}
-                            className={styles['carouseltypethird-dot']}
-                            style={{
-                                backgroundColor: index === currentIndex ? 'black' : 'white'
-                            }}
-                            onMouseEnter={() => handleDotHover(index)}
-                        />
-                    ))}
+                <div className={styles['carouseltypethird-dots-wrapper']}>
+                    <div className={styles['carouseltypethird-dots']}>
+                        {slides.map((slide, index) => (
+                            <div
+                                key={slide.id}
+                                className={`${styles['carouseltypethird-dot']} ${index === currentIndex ? styles['carouseltypethird-dot-active'] : ''}`}
+                                onMouseEnter={() => handleDotHover(index)}
+                            />
+                        ))}
+                    </div>
                 </div>
 
                 <button
