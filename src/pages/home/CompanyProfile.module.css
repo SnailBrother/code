@@ -154,7 +154,7 @@
 .carouseltypesecond-right-button {
   width: 35px;
   height: 70px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.1);
   color: #fff;
   text-align: center;
   line-height: 70px;
@@ -286,6 +286,7 @@
   line-height: 1.6;
   color: #666;
   margin: 0;
+  white-space: pre-line; /* 添加这一行，使 \n 生效 */
 }
 
 /* 响应式调整 */

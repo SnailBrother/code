@@ -26,7 +26,7 @@ const CarouselTypeFifth = () => {
       bgColor: '#c45c4a'
     },
     {
-      title: '政府',
+      title: '国资委',
       subtitle: '法定',
       description: '那年我们一起去爬山',
       images: [

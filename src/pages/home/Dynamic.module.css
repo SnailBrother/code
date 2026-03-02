@@ -23,7 +23,20 @@
     padding: 30px 100px;
     overflow: hidden;
   }
-  
+  .carouseltypethird-description {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    white-space: nowrap;
+    z-index: 300;
+    pointer-events: none;  /* 防止干扰鼠标事件 */
+}
   /* 水墨风格背景 */
   .carouseltypethird-title-bg {
     position: absolute;

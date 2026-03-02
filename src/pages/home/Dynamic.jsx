@@ -4,12 +4,12 @@ import styles from './Dynamic.module.css';
 const CarouselTypeThird = () => {
     // 图片源保持在组件内部
     const images = [
-        '/Picture/home/Dynamic/1.jpg',
-       '/Picture/home/Dynamic/2.jpg',
-       '/Picture/home/Dynamic/3.jpg',
-        '/Picture/home/Dynamic/4.jpg',
-        '/Picture/home/Dynamic/5.jpg',
-        '/Picture/home/Dynamic/6.jpg',
+        { src: '/Picture/home/Dynamic/1.jpg', description: '描述内容1' },
+        { src: '/Picture/home/Dynamic/2.jpg', description: '描述内容2' },
+        { src: '/Picture/home/Dynamic/3.jpg', description: '描述内容3' },
+        { src: '/Picture/home/Dynamic/4.jpg', description: '描述内容4' },
+        { src: '/Picture/home/Dynamic/5.jpg', description: '描述内容5' },
+        { src: '/Picture/home/Dynamic/6.jpg', description: '公司十分重视与各高校合作，于2011年在重庆工商大学设立“瑞达奖学金”、2020年与重庆商务职业学院建立实习基地，深化校企合作，积极推动产、学、研结合，扩大了后备人才储备。' },
     ];
 
     const [slides, setSlides] = useState([]);
@@ -19,9 +19,10 @@ const CarouselTypeThird = () => {
 
     // Initialize slides
     useEffect(() => {
-        const initialSlides = images.map((img, index) => ({
+        const initialSlides = images.map((item, index) => ({
             id: index + 1,
-            src: img
+            src: item.src,
+            description: item.description  // 添加这一行
         }));
         setSlides(initialSlides);
     }, []);
@@ -121,6 +122,13 @@ const CarouselTypeThird = () => {
                             onMouseLeave={index === currentIndex ? handleMouseLeave : undefined}
                         >
                             <img src={slide.src} alt={`banner-${slide.id}`} className={styles['carouseltypethird-img']} />
+
+                            {/* 只在中间图片显示描述 */}
+                            {index === currentIndex && (
+                                <div className={styles['carouseltypethird-description']}>
+                                    {slide.description}
+                                </div>
+                            )}
                         </li>
                     );
                 })}
