@@ -90,8 +90,8 @@ const CarouselTypeThird = () => {
                 <div className={styles['carouseltypethird-title-container']}>
                     <div className={styles['carouseltypethird-title-bg']}></div>
                     <h2 className={styles['carouseltypethird-title']}>
-                        <span className={styles['carouseltypethird-title-text']}>公司动态</span>
-                        <span className={styles['carouseltypethird-title-shadow']}>公司动态</span>
+                        <span className={styles['carouseltypethird-title-text']}>企业团队</span>
+                        <span className={styles['carouseltypethird-title-shadow']}>企业团队</span>
                     </h2>
                     <div className={styles['carouseltypethird-decoration']}>
                         <div className={styles['carouseltypethird-decoration-left']}></div>

@@ -1,97 +1,75 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './Partner.module.css';
 
-const CarouselTypeFifth = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  const items = [
+const CarouselTypeNinth = () => {
+  const firstRowItems = [
     {
-      title: '银行',
-      subtitle: '抵押',
-      description: '合作银行',
-      images: [
-        { src: `/Picture/home/Partner/1.png`, desc: '陈宝宝下车在和妈妈打电话' },
-        { src: `http://121.4.22.55:80/backend/images/OurHomePage/CarouselTypeFifth/2.jpg`, desc: '陈宝宝刚出洞口' }
-      ],
-      bgColor: '#4a6fa5'
+      title: '无形资产评估',
+      image: '/Picture/home/Dynamic/1.jpg'
     },
     {
-      title: '法院',
-      subtitle: '司法',
-      description: '那年我们一起去滑雪',
-      images: [
-        { src: `http://121.4.22.55:80/backend/images/OurHomePage/CarouselTypeFifth/3.jpg`, desc: '羞涩的陈宝宝' },
-        { src: `http://121.4.22.55:80/backend/images/OurHomePage/CarouselTypeFifth/4.jpg`, desc: '可爱的陈宝宝' }
-      ],
-      bgColor: '#c45c4a'
-    },
-    {
-      title: '国资委',
-      subtitle: '法定',
-      description: '那年我们一起去爬山',
-      images: [
-        { src: `http://121.4.22.55:80/backend/images/OurHomePage/CarouselTypeFifth/5.jpg`, desc: '好大的瀑布' },
-        { src: `http://121.4.22.55:80/backend/images/OurHomePage/CarouselTypeFifth/6.jpg`, desc: '陈宝宝被冷风吹' }
-      ],
-      bgColor: '#5a8f69'
+      title: '司法鉴定评估',
+      image: '/Picture/home/Dynamic/2.jpg'
     }
   ];
 
-  const toggleItem = (index) => {
-    setActiveIndex(index);
+  const mainItem = {
+    title: '合作伙伴',
+    subtitle: '服务领域'
   };
 
-  return (
-    <div className={styles['carouseltypefifth-container']}>
+  const secondRowItems = [
+    {
+      title: '企业价值评估',
+      image: '/Picture/home/Dynamic/3.jpg'
+    },
+    {
+      title: '单项资产评估',
+      image: '/Picture/home/Dynamic/4.jpg'
+    },
+    {
+      title: '房地产估价',
+      image: '/Picture/home/Dynamic/5.jpg'
+    },
+    {
+      title: '土地估价',
+      image: '/Picture/home/Dynamic/6.jpg'
+    }
+  ];
 
-      <div className={styles['carouseltypefifth-header-titcontainer']}>
-        <div className={styles['carouseltypefifth-title-container']}>
-          <div className={styles['carouseltypefifth-title-bg']}></div>
-          <h2 className={styles['carouseltypefifth-title']}>
-            <span className={styles['carouseltypefifth-title-text']}>合作伙伴</span>
-            <span className={styles['carouseltypefifth-title-stroke']}>合作伙伴</span>
-          </h2>
-          <div className={styles['carouseltypefifth-decoration']}>
-            <div className={styles['carouseltypefifth-decoration-path']}></div>
-            <div className={styles['carouseltypefifth-decoration-icon']}>✈</div>
-          </div>
+  return (
+    <div className={styles['carouseltypeninth-container']}>
+      {/* First Row - Two Hexagons + Text Content */}
+      <div className={styles['carouseltypeninth-first-row']}>
+        <div className={styles['carouseltypeninth-first-row-images']}>
+          {firstRowItems.map((item, index) => (
+            <div key={index} className={styles['carouseltypeninth-first-row-hexagon-item']}>
+              <div 
+                className={styles['carouseltypeninth-first-row-hexagon']} 
+                style={{ backgroundImage: `url(${item.image})` }}
+              >
+                <div className={styles['carouseltypeninth-first-row-hexagon-text']}>{item.title}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className={styles['carouseltypeninth-text-content']}>
+          <h2 className={styles['carouseltypeninth-main-title']}>{mainItem.title}</h2>
+          <p className={styles['carouseltypeninth-main-subtitle']}>{mainItem.subtitle}</p>
+          <button className={styles['carouseltypeninth-more-btn']}>查看更多 &gt;</button>
         </div>
       </div>
 
-
-      <div className={styles['carouseltypefifth-accordion']}>
-        {items.map((item, index) => (
-          <div
-            key={index}
-            className={`${styles['carouseltypefifth-item']} ${index === activeIndex ? styles['active'] : ''}`}
-            onClick={() => toggleItem(index)}
-            style={{ backgroundColor: item.bgColor }}
-          >
-            <div className={styles['carouseltypefifth-header']}>
-              <div className={styles['carouseltypefifth-title-wrapper']}>
-                {item.title.split('').map((char, i) => (
-                  <span key={i} className={styles['carouseltypefifth-char']}>{char}</span>
-                ))}
-                <p className={styles['carouseltypefifth-subtitle']}>{item.subtitle}</p>
-              </div>
-            </div>
-
-            <div className={styles['carouseltypefifth-content']}>
-              <div className={styles['carouseltypefifth-description']}>
-                {item.description}
-              </div>
-              <div className={styles['carouseltypefifth-images']}>
-                {item.images.map((image, imgIndex) => (
-                  <div key={imgIndex} className={styles['carouseltypefifth-image-container']}>
-                    <img
-                      src={image.src}
-                      alt={image.desc}
-                      className={styles['carouseltypefifth-image']}
-                    />
-                    <p className={styles['carouseltypefifth-image-desc']}>{image.desc}</p>
-                  </div>
-                ))}
-              </div>
+      {/* Second Row - Four Hexagon Items */}
+      <div className={styles['carouseltypeninth-second-row']}>
+        {secondRowItems.map((item, index) => (
+          <div key={index} className={styles['carouseltypeninth-second-row-item']}>
+            <div 
+              className={styles['carouseltypeninth-second-row-hexagon']} 
+              style={{ backgroundImage: `url(${item.image})` }}
+            >
+              <div className={styles['carouseltypeninth-second-row-hexagon-text']}>{item.title}</div>
             </div>
           </div>
         ))}
@@ -100,4 +78,4 @@ const CarouselTypeFifth = () => {
   );
 };
 
-export default CarouselTypeFifth;
+export default CarouselTypeNinth;

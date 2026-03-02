@@ -197,7 +197,7 @@ const HomeOptions = () => {
           </div>
         </div>
         
-        {/* 第3页 - 公司动态 */}
+        {/* 第3页 - 企业团队 */}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page3}`}>
            <Dynamic/>  
