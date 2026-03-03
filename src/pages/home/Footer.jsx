@@ -33,9 +33,9 @@ const Footer = () => {
               <li><a href="#" className={styles.link}>公司首页</a></li>
               <li><a href="#" className={styles.link}>公司简介</a></li>
               <li><a href="#" className={styles.link}>合作伙伴</a></li>
-              <li><a href="#" className={styles.link}>企业团队</a></li>
+              <li><a href="#" className={styles.link}>报告验证</a></li>
               <li><a href="#" className={styles.link}>人才招聘</a></li>
-              <li><a href="#" className={styles.link}>联系我们</a></li>
+              <li><a href="#" className={styles.link}>数据库</a></li>
             </ul>
           </div>
 

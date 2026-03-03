@@ -4,7 +4,7 @@ import styles from './CompanyProfile.module.css';
 const images = [
   {
     id: 1,
-    src: '/Picture/home/CompanyProfile/Service.png',
+    src: '/Picture/home/CompanyProfile/Service.jpg',
     alt: 'Image 1',
     title: '经营范围', // 添加标题
     description: '司法鉴定服务。\n' +
@@ -17,7 +17,7 @@ const images = [
   },
   {
     id: 2,
-    src: '/Picture/home/CompanyProfile/Qualification.png',
+    src: '/Picture/home/CompanyProfile/Qualification.jpg',
     alt: 'Image 2',
     title: '资质',
     description: '土地估价A级资格\n' +
@@ -27,7 +27,7 @@ const images = [
   },
   {
     id: 3,
-    src: '/Picture/home/CompanyProfile/Honor.png',
+    src: '/Picture/home/CompanyProfile/Honor.jpg',
     alt: 'Image 3',
     title: '企业荣誉', // 添加标题
     description: '重庆工商大学管理学院实习实践基地奖\n' +
@@ -37,7 +37,7 @@ const images = [
   },
   {
     id: 4,
-    src: '/Picture/home/CompanyProfile/Purpose.png',
+    src: '/Picture/home/CompanyProfile/Purpose.jpg',
     alt: 'Image 4',
     title: '理念与宗旨', // 添加标题
 
@@ -46,7 +46,7 @@ const images = [
   },
   {
     id: 5,
-    src: '/Picture/home/CompanyProfile/Team.png',
+    src: '/Picture/home/CompanyProfile/Team.jpg',
     alt: 'Image 5',
     title: '专业团队', // 添加标题
     description: '公司现有从业人员50余人，其中硕士研究生3人，高级职称8人，中级职称15人。\n' +

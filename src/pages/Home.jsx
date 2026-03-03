@@ -1,9 +1,10 @@
 // src/pages/Home.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link } from 'react-router-dom'; // 添加这行导入Link
+import { Link } from 'react-router-dom';
 import styles from './Home.module.css';
 import Dynamic from './home/Dynamic';
 import Partner from './home/Partner';
+import Service from './home/Service';
 import ContactUs from './home/ContactUs';
 import CompanyProfile from './home/CompanyProfile';
 import Recruitment from './home/Examples';
@@ -13,12 +14,14 @@ import Footer from './home/Footer';
 const HomeOptions = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // 添加移动端菜单状态
   const containerRef = useRef(null);
   const touchStartY = useRef(0);
+  const menuRef = useRef(null); // 添加菜单引用，用于点击外部关闭
 
   // 导航项 - 对应每个页面
-  const navItems = ['关于我们', '服务领域', '企业案例', '企业团队', '新闻动态', '联系我们'];
-  const totalPages = 7; // 总共7个页面，有一个页脚
+  const navItems = ['关于我们', '服务领域', '合作伙伴', '企业案例', '企业团队', '新闻动态', '联系我们'];
+  const totalPages = 8; // 总共7个页面，有一个页脚
 
   // logo图片路径
   const logoImg = '/RuidaLogo.jpg';
@@ -29,6 +32,7 @@ const HomeOptions = () => {
 
     setIsAnimating(true);
     setCurrentPage(pageIndex);
+    setIsMenuOpen(false); // 切换页面时关闭移动菜单
 
     // 平滑滚动效果
     if (containerRef.current) {
@@ -39,6 +43,25 @@ const HomeOptions = () => {
       setIsAnimating(false);
     }, 600);
   }, [currentPage, isAnimating]);
+
+  // 切换移动菜单
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  // 点击外部关闭菜单
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // 下一页
   const nextPage = useCallback(() => {
@@ -56,52 +79,39 @@ const HomeOptions = () => {
 
   // 鼠标滚轮事件
   useEffect(() => {
-// 在 Home.jsx 的 handleWheel 中修改
-// 在 Home.jsx 的 handleWheel 中修改
+    const handleWheel = (e) => {
+      if (isAnimating) return;
 
-const handleWheel = (e) => {
-  if (isAnimating) return;
+      // 检测用户是否正在尝试缩放
+      if (e.ctrlKey || e.metaKey) {
+        return;
+      }
 
-  // 【关键修改 1】检测用户是否正在尝试缩放 (按住 Ctrl/Cmd/Meta 键)
-  if (e.ctrlKey || e.metaKey) {
-    // 如果是缩放手势，直接返回，不要阻止默认行为，交给浏览器处理
-    return; 
-  }
+      const container = containerRef.current;
+      if (!container || !container.children[currentPage]) return;
 
-  const container = containerRef.current;
-  // 获取当前激活的页面对象
-  // 注意：确保 children[currentPage] 存在
-  if (!container || !container.children[currentPage]) return;
-  
-  const currentPageElement = container.children[currentPage].querySelector(`.${styles.pageContent}`) || container.children[currentPage]; 
-  
-  if (!currentPageElement) return;
+      const currentPageElement = container.children[currentPage].querySelector(`.${styles.pageContent}`) || container.children[currentPage];
 
-  const { scrollTop, scrollHeight, clientHeight } = currentPageElement;
-  const isAtTop = scrollTop === 0;
-  const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1; // -1 兼容不同浏览器的精度误差
+      if (!currentPageElement) return;
 
-  // 【关键修改 2】只有当内容确实无法再滚动时，才阻止默认行为并翻页
-  if (e.deltaY > 0) {
-    // 向下滚
-    if (!isAtBottom) {
-      // 还没到底，让浏览器自己滚动内部内容 (不要 preventDefault)
-      return; 
-    }
-    // 到底了，才阻止默认行为并翻页
-    e.preventDefault(); 
-    nextPage();
-  } else if (e.deltaY < 0) {
-    // 向上滚
-    if (!isAtTop) {
-      // 还没到顶，让浏览器自己滚动
-      return;
-    }
-    // 到顶了，才阻止默认行为并翻页
-    e.preventDefault();
-    prevPage();
-  }
-};
+      const { scrollTop, scrollHeight, clientHeight } = currentPageElement;
+      const isAtTop = scrollTop === 0;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+      if (e.deltaY > 0) {
+        if (!isAtBottom) {
+          return;
+        }
+        e.preventDefault();
+        nextPage();
+      } else if (e.deltaY < 0) {
+        if (!isAtTop) {
+          return;
+        }
+        e.preventDefault();
+        prevPage();
+      }
+    };
 
     const container = containerRef.current;
     if (container) {
@@ -193,7 +203,7 @@ const handleWheel = (e) => {
               <span className={styles.companyName}>重庆瑞达资产评估房地产土地估价有限公司</span>
             </div>
 
-            {/* 中间：导航菜单 */}
+            {/* 中间：导航菜单 - 桌面端显示 */}
             <div className={styles.navCenter}>
               {navItems.map((item, index) => (
                 <button
@@ -206,6 +216,7 @@ const handleWheel = (e) => {
               ))}
             </div>
 
+            
             {/* 右侧：搜索框和登录按钮 */}
             <div className={styles.navRight}>
               <div className={styles.searchBox}>
@@ -219,7 +230,58 @@ const handleWheel = (e) => {
               <Link to="/login" className={styles.loginButton}>
                 登录
               </Link>
+
+              {/* 移动端菜单按钮 - 三条横线，垂直居中 */}
+              <button
+                className={styles.menuToggle}
+                onClick={toggleMenu}
+                aria-label="菜单"
+              >
+                <span className={styles.menuIcon}></span>
+                <span className={styles.menuIcon}></span>
+                <span className={styles.menuIcon}></span>
+              </button>
             </div>
+
+            {/* 移动端下拉菜单 */}
+            {isMenuOpen && (
+              <div className={styles.mobileMenu} ref={menuRef}>
+                <div className={styles.mobileMenuHeader}>
+                  
+                  <span className={styles.mobileCompanyName}>重庆瑞达资产评估</span>
+                  <button className={styles.mobileCloseBtn} onClick={toggleMenu}>×</button>
+                </div>
+
+                  <div className={styles.mobileSearchBox}>
+                    <input
+                      type="text"
+                      placeholder="搜索..."
+                      className={styles.mobileSearchInput}
+                    />
+                    <button className={styles.mobileSearchButton}>🔍</button>
+                  </div>
+                  
+                <div className={styles.mobileNavItems}>
+                  {navItems.map((item, index) => (
+                    <button
+                      key={index}
+                      onClick={() => goToPage(index)}
+                      className={`${styles.mobileNavButton} ${currentPage === index ? styles.mobileNavActive : ''}`}
+                    >
+                      {item}
+                    </button>
+                  ))}
+                  <div className={styles.mobileDivider}></div>
+                
+                  {/* 修改这里：让登录按钮样式和导航按钮一致 */}
+                  <Link to="/login" className={styles.mobileNavButton} onClick={toggleMenu}>
+                    登录
+                  </Link>
+                </div>
+              </div>
+            )}
+
+           
           </nav>
           {/* 第1页 -关于我们 */}
           <div className={`${styles.pageContent} ${styles.page1}`}>
@@ -230,45 +292,46 @@ const handleWheel = (e) => {
         {/* 第2页 -服务领域 */}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page2}`}>
+            <Service />
+          </div>
+        </div>
+
+        {/* 第3页 -合作伙伴 */}
+        <div className={styles.page}>
+          <div className={`${styles.pageContent} ${styles.page2}`}>
             <Partner />
           </div>
         </div>
 
-        {/* 第3页 - 企业案例 */}
+        {/* 第4页 - 企业案例 */}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page3}`}>
             <Recruitment />
           </div>
         </div>
 
-        {/* 第4页 - 企业团队 */}
+        {/* 第5页 - 企业团队 */}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page4}`}>
-
             <Dynamic />
-
           </div>
         </div>
 
-        {/* 第5页 -  新闻动态*/}
+        {/* 第6页 -  新闻动态*/}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page5}`}>
-
             <NewsUpdates />
           </div>
         </div>
 
-        {/* 第6页 -  联系我们*/}
+        {/* 第7页 -  联系我们*/}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page5}`}>
-            {/* <h2>联系我们</h2> */}
             <ContactUs />
           </div>
         </div>
 
-
-
-        {/* 第7页 -  页脚*/}
+        {/* 第8页 -  页脚*/}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page7}`}>
             <Footer />
