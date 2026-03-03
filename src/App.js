@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Codesettings from './pages/QrcodeManagementSettings';
 import CodeCheck from './pages/CodeCheck';
+import MessageManagement from './pages/MessageManagement';
 import './App.css';
 
 // 定义本地存储的 Key 常量
@@ -34,7 +35,7 @@ function App() {
   };
 
   // 处理登出
-  const handleLogout = () => {  
+  const handleLogout = () => {
     setIsLoggedIn(false);
     // useEffect 会自动处理清除逻辑
   };
@@ -44,14 +45,14 @@ function App() {
       <Routes>
         {/* 公开路由 */}
         <Route path="/" element={<Home />} />
-        
+
         {/* 二维码查验页面 (通常不需要登录也能看，或者根据需要调整) */}
         <Route path="/codecheck/:code" element={<CodeCheck />} />
-        
+
         {/* 登录页：如果已登录，直接跳转到管理页 */}
-        <Route 
-          path="/login" 
-          element={isLoggedIn ? <Navigate to="/codesettings" /> : <Login onLogin={handleLogin} />} 
+        <Route
+          path="/login"
+          element={isLoggedIn ? <Navigate to="/codesettings" /> : <Login onLogin={handleLogin} />}
         />
 
         {/* 受保护的路由 - 操作管理页 */}
@@ -62,6 +63,17 @@ function App() {
               <Codesettings onLogout={handleLogout} />
             ) : (
               /* 如果未登录尝试访问，重定向到登录页 */
+              <Navigate to="/login" />
+            )
+          }
+        />
+        {/* 受保护的路由 - 消息管理页 */}
+        <Route
+          path="/messagemanagement"
+          element={
+            isLoggedIn ? (
+              <MessageManagement onLogout={handleLogout} />
+            ) : (
               <Navigate to="/login" />
             )
           }

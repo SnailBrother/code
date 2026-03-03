@@ -79,21 +79,32 @@
 /* 页面内容区域 */
 .pageContent {
   width: 100%;
-  height: 100%;
-  border-radius: 0px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  /* 关键修改：不要写死 height: 100%，或者如果必须写，要配合 overflow */
+  min-height: 100%; 
+  height: auto;      /* <--- 允许高度随内容撑开 */
+  
+  /* 关键修改：允许垂直滚动 */
+  overflow-y: auto;  /* <--- 添加这个，让内容多出来时出现滚动条 */
+  overflow-x: hidden;
+  
+  /* 为了美观，可以隐藏滚动条但保留功能 (可选) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE/Edge */
+  /* 【关键新增】允许浏览器处理默认的缩放手势 (pinch-to-zoom) */
+  touch-action: auto; 
+  
+  /* 确保内容不会被裁剪导致无法看到放大后的效果 */
+  transform-origin: top center; 
+  max-width: 100%; /* 防止内容过宽导致横向滚动条干扰缩放 */
 }
 .pageContent h2 {
   color: #000; /* 纯黑色，也可以用 black 关键字 */
   /* 可选：如果需要确保样式优先级，可加 !important */
    color: #000 !important; 
 }
-
+.pageContent::-webkit-scrollbar { 
+  display: none; /* Chrome/Safari 隐藏滚动条 */
+}
 /* 各页面背景色 */
 .page1 {
   background: #fff;
@@ -101,7 +112,14 @@
   margin-top: 60px;
   height: calc(100dvh - 60px);
 }
-
+.page1 {
+  /* 保持你的 margin-top */
+  margin-top: 60px;
+  /* 确保高度计算正确，且允许溢出 */
+  min-height: calc(100dvh - 60px); 
+  height: auto; 
+  overflow-y: auto; /* <--- 这里也要加上 */
+}
 /* .page2 {
   background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
 } */

@@ -56,17 +56,52 @@ const HomeOptions = () => {
 
   // 鼠标滚轮事件
   useEffect(() => {
-    const handleWheel = (e) => {
-      if (isAnimating) return;
+// 在 Home.jsx 的 handleWheel 中修改
+// 在 Home.jsx 的 handleWheel 中修改
 
-      e.preventDefault();
+const handleWheel = (e) => {
+  if (isAnimating) return;
 
-      if (e.deltaY > 0) {
-        nextPage();
-      } else if (e.deltaY < 0) {
-        prevPage();
-      }
-    };
+  // 【关键修改 1】检测用户是否正在尝试缩放 (按住 Ctrl/Cmd/Meta 键)
+  if (e.ctrlKey || e.metaKey) {
+    // 如果是缩放手势，直接返回，不要阻止默认行为，交给浏览器处理
+    return; 
+  }
+
+  const container = containerRef.current;
+  // 获取当前激活的页面对象
+  // 注意：确保 children[currentPage] 存在
+  if (!container || !container.children[currentPage]) return;
+  
+  const currentPageElement = container.children[currentPage].querySelector(`.${styles.pageContent}`) || container.children[currentPage]; 
+  
+  if (!currentPageElement) return;
+
+  const { scrollTop, scrollHeight, clientHeight } = currentPageElement;
+  const isAtTop = scrollTop === 0;
+  const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1; // -1 兼容不同浏览器的精度误差
+
+  // 【关键修改 2】只有当内容确实无法再滚动时，才阻止默认行为并翻页
+  if (e.deltaY > 0) {
+    // 向下滚
+    if (!isAtBottom) {
+      // 还没到底，让浏览器自己滚动内部内容 (不要 preventDefault)
+      return; 
+    }
+    // 到底了，才阻止默认行为并翻页
+    e.preventDefault(); 
+    nextPage();
+  } else if (e.deltaY < 0) {
+    // 向上滚
+    if (!isAtTop) {
+      // 还没到顶，让浏览器自己滚动
+      return;
+    }
+    // 到顶了，才阻止默认行为并翻页
+    e.preventDefault();
+    prevPage();
+  }
+};
 
     const container = containerRef.current;
     if (container) {
@@ -226,7 +261,7 @@ const HomeOptions = () => {
         {/* 第6页 -  联系我们*/}
         <div className={styles.page}>
           <div className={`${styles.pageContent} ${styles.page5}`}>
-            <h2>联系我们</h2>
+            {/* <h2>联系我们</h2> */}
             <ContactUs />
           </div>
         </div>

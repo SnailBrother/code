@@ -2,6 +2,7 @@ const express = require('express');
 const sql = require('mssql');
 const http = require('http');
 const cors = require('cors'); // 建议安装: npm install cors
+const socketIo = require('socket.io');
 
 const app = express();
 const port = 5203;
@@ -13,7 +14,7 @@ app.use(express.json()); // 解析 JSON 请求体 (非常重要，否则 req.bod
 // SQL Server 配置
 const config = {
     user: 'sa',
-    password: 'Alan944926',
+    password: 'Alan944926',// ⚠️ 建议移至 .env 文件
     server: '121.4.22.55',
     database: 'RdpgCode', // 注意：你之前代码里有的地方写 BillingApp，有的写 RdpgCode，请确认数据库名
     port: 1433, // 显式指定端口
@@ -29,6 +30,7 @@ const config = {
     }
 };
 
+
 // 创建全局连接池单例
 const pool = new sql.ConnectionPool(config);
 const poolConnect = pool.connect();
@@ -41,6 +43,45 @@ poolConnect.then(() => {
     console.error('请检查：1. 服务器防火墙/安全组是否开放 1433 端口; 2. SQL Server 是否启用 TCP/IP; 3. 账号密码是否正确');
     // 不要 process.exit(1)，让服务器继续运行，也许稍后网络恢复能连上，或者至少能响应健康检查
 });
+
+// 初始化 HTTP 服务器和 Socket.io
+const server = http.createServer(app);  // 这一行是缺失的！
+const io = require('socket.io')(server, { 
+    cors: {
+        origin: '*', // 生产环境建议换成具体域名
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true
+    },
+    // 建议添加以下配置以保持连接稳定
+    pingTimeout: 60000,
+    pingInterval: 25000
+});
+
+
+// --- Socket.io 逻辑 ---
+io.on('connection', (socket) => {
+    console.log('🔌 客户端连接成功:', socket.id);
+
+    // 当管理页面加载时，可以主动请求一次最新数据（可选）
+    socket.on('request_latest_messages', async () => {
+        try {
+            await poolConnect;
+            const result = await pool.request()
+                .query('SELECT TOP 50 * FROM RdpgCode.dbo.CqrdpgBusiness ORDER BY submitted DESC');
+
+            socket.emit('initial_messages', result.recordset);
+        } catch (err) {
+            console.error('获取初始消息失败:', err);
+            socket.emit('error', '获取消息失败');
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('🔌 客户端断开连接:', socket.id);
+    });
+});
+
+
 
 // 辅助函数：获取已连接的池
 async function getPool() {
@@ -65,13 +106,13 @@ async function generateSafeCodeFromId(originalId, pool) {
     // 遍历 ID 的每一位数字
     for (let char of idStr) {
         const digit = parseInt(char, 10);
-        
+
         // 查询映射表
         const request = pool.request();
         const result = await request
             .input('val', sql.Int, digit)
             .query(`SELECT DecodedText FROM RdpgCode.dbo.CqrdpgCodepageDecodeMapping WHERE OriginalValue = @val`);
-        
+
         if (result.recordset.length === 0) {
             throw new Error(`映射表缺少数字 ${digit} 的配置`);
         }
@@ -85,17 +126,17 @@ async function generateSafeCodeFromId(originalId, pool) {
 // 新增：反向解析工具函数 (将混淆码解析回 ID)
 async function getIdFromSafeCode(safeCode, pool) {
     if (!safeCode) return null;
-    
+
     const parts = safeCode.split('&');
     let originalIdStr = '';
 
     const requestTemplate = pool.request();
-    
+
     for (let part of parts) {
         const result = await requestTemplate
             .input('text', sql.NVarChar, part)
             .query(`SELECT OriginalValue FROM RdpgCode.dbo.CqrdpgCodepageDecodeMapping WHERE DecodedText = @text`);
-        
+
         if (result.recordset.length === 0) {
             return null; // 无效的混淆码
         }
@@ -128,7 +169,7 @@ app.get('/api/CodeDatabase/List', async (req, res) => {
             OFFSET @offset ROWS
             FETCH NEXT @pageSize ROWS ONLY
         `;
-        
+
         const countQuery = `
             SELECT COUNT(*) as total FROM dbo.CodeDatabase 
             WHERE ProjectName LIKE @keyword OR ReportNumber LIKE @keyword
@@ -186,7 +227,7 @@ app.post('/api/CodeDatabase/Add', async (req, res) => {
             VALUES 
             (@ProjectName, @EvaluationAmount, @ReportTime, @ReportNumber, @SignerA_Name, @SignerA_Number, @SignerB_Name, @SignerB_Number)
         `);
-        
+
         // 获取刚插入的 ID (可选，方便直接返回 safeCode)
         const idResult = await request.query(`SELECT SCOPE_IDENTITY() as newId`);
         const newId = Math.floor(idResult.recordset[0].newId);
@@ -263,10 +304,10 @@ app.get('/api/CodeDatabase/VerifyAndFetch', async (req, res) => {
         }
 
         const pool = await getPool();
-        
+
         // 1. 解析混淆码得到真实 ID
         const realId = await getIdFromSafeCode(code, pool);
-        
+
         if (!realId) {
             return res.status(404).json({ error: '无效的校验码或数据不存在' });
         }
@@ -297,7 +338,89 @@ app.get('/api/CodeDatabase/VerifyAndFetch', async (req, res) => {
     }
 });
 
- 
+
+
+
+// 1. 提交联系表单 (ContactUs 使用)
+app.post('/api/CodeDatabase/submitContact', async (req, res) => {
+    const { requestername, contact, description } = req.body;
+
+    if (!requestername || !description) {
+        return res.status(400).json({ success: false, message: '姓名和描述不能为空' });
+    }
+
+    try {
+        await poolConnect;
+        const request = new sql.Request(pool);
+
+        // 插入数据
+        const result = await request
+            .input('requestername', sql.NVarChar(50), requestername)
+            .input('contact', sql.NVarChar(50), contact || null)
+            .input('description', sql.NVarChar(sql.MAX), description)
+            .query(`
+                INSERT INTO RdpgCode.dbo.CqrdpgBusiness (requestername, contact, description, isread, submitted)
+                VALUES (@requestername, @contact, @description, 0, GETDATE());
+                SELECT SCOPE_IDENTITY() as newId;
+            `);
+
+        const newId = result.recordset[0].newId;
+
+        // 🔥 实时通知所有连接的管理端用户
+        const newMessage = {
+            id: parseInt(newId),
+            requestername,
+            contact: contact || '未提供',
+            description,
+            isread: 0,
+            submitted: new Date().toISOString(),
+            responded: null
+        };
+
+        io.emit('new_message_received', newMessage);
+
+        res.json({ success: true, message: '提交成功', id: newId });
+    } catch (err) {
+        console.error('数据库插入错误:', err);
+        res.status(500).json({ success: false, message: '服务器内部错误', error: err.message });
+    }
+});
+
+// 2. 获取消息列表 (MessageManagement 初始化使用，作为 Socket 的备用或初始加载)
+app.get('/api/CodeDatabase/getMessages', async (req, res) => {
+    try {
+        await poolConnect;
+        const result = await pool.request()
+            .query('SELECT * FROM RdpgCode.dbo.CqrdpgBusiness ORDER BY submitted DESC');
+
+        res.json({ success: true, data: result.recordset });
+    } catch (err) {
+        console.error('获取消息列表错误:', err);
+        res.status(500).json({ success: false, message: '获取数据失败' });
+    }
+});
+
+// 3. 标记为已读 (可选功能)
+app.put('/api/CodeDatabase/markAsRead/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await poolConnect;
+        await pool.request()
+            .input('id', sql.Int, id)
+            .query('UPDATE RdpgCode.dbo.CqrdpgBusiness SET isread = 1, responded = GETDATE() WHERE id = @id');
+
+        // 通知前端列表更新
+        io.emit('message_updated', { id: parseInt(id), isread: 1, responded: new Date().toISOString() });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+{//beizhu
+
+}
 
 
 
@@ -307,7 +430,7 @@ app.get('/', (req, res) => {
 });
 
 // 启动服务器
-const server = http.createServer(app);
+//const server = http.createServer(app);
 server.listen(port, () => {
     console.log(`🚀 CqrdCodeServer is running on http://localhost:${port}`);
 });
