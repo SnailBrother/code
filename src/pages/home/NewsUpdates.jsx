@@ -12,7 +12,7 @@ const NewsUpdates = () => {
       date: '2024-03-15',
       title: '瑞达评估荣获重庆市“优秀司法鉴定机构”称号',
       summary: '近日，重庆市司法局公布了2023年度司法鉴定机构考核结果，瑞达评估公司凭借专业的评估能力和优质的服务水平，荣获“优秀司法鉴定机构”称号...',
-      image: '/Picture/home/News/3.jpg',
+      image: '/Picture/home/News/1.jpg',
       views: 1256
     },
     {
@@ -21,7 +21,7 @@ const NewsUpdates = () => {
       date: '2024-03-10',
       title: '《资产评估法》修订草案征求意见稿发布',
       summary: '为适应新时代资产评估行业发展的需要，财政部近日发布了《中华人民共和国资产评估法》修订草案征求意见稿，向社会公开征求意见...',
-      image: '/Picture/home/News/3.jpg',
+      image: '/Picture/home/News/2.jpg',
       views: 2341
     },
     {
@@ -39,7 +39,7 @@ const NewsUpdates = () => {
       date: '2024-02-28',
       title: '2024年中国房地产估价师执业资格考试报名通知',
       summary: '根据人力资源社会保障部办公厅《关于2024年度专业技术人员职业资格考试工作计划及有关事项的通知》，2024年房地产估价师职业资格考试将于10月举行...',
-      image: '/Picture/home/News/3.jpg',
+      image: '/Picture/home/News/4.jpg',
       views: 1567
     },
     {
@@ -48,7 +48,7 @@ const NewsUpdates = () => {
       date: '2024-02-20',
       title: '重庆市发布《国有土地上房屋征收评估技术规范》',
       summary: '为进一步规范国有土地上房屋征收评估行为，重庆市住房和城乡建设委员会近日发布了《重庆市国有土地上房屋征收评估技术规范（试行）》...',
-      image: '/Picture/home/News/3.jpg',
+      image: '/Picture/home/News/5.jpg',
       views: 1103
     },
     {
@@ -57,7 +57,7 @@ const NewsUpdates = () => {
       date: '2024-02-15',
       title: '瑞达评估参与重庆市轨道交通建设征地拆迁评估项目',
       summary: '瑞达评估公司成功中标重庆市轨道交通27号线、18号线等项目的征地拆迁评估工作，将为轨道交通建设提供专业的评估服务...',
-      image: '/Picture/home/News/3.jpg',
+      image: '/Picture/home/News/6.jpg',
       views: 745
     },
     {

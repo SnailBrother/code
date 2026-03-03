@@ -12,7 +12,7 @@
   /* border: 1px red solid; */
   overflow: hidden;
   border-radius: 10px;
-    height: 100dvh;
+    height: calc(100dvh - 70px);
   overflow: hidden;
   padding: 20px;
 }
@@ -255,11 +255,17 @@
   right: 10%;
   transform: translateY(-50%);
   width: 300px;
-  background: rgba(255, 255, 255, 0.9);
+  /* 主要修改点：降低透明度，增加模糊强度，移除纯色背景 */
+  background: rgba(255, 255, 255, 0.3); /* 更透明，让背景透出来 */
+  backdrop-filter: blur(15px); /* 增加模糊半径，实现朦胧感 */
+  -webkit-backdrop-filter: blur(15px); /* 兼容Safari */
+  
+  /* 新增：添加一个淡淡的边框，增强玻璃质感 */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  
   padding: 25px;
   border-radius: 10px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(5px);
   z-index: 200;
   animation: fadeInRight 0.8s ease;
 }
@@ -287,7 +293,7 @@
 .carouseltypesecond-description-text {
   font-size: 1rem;
   line-height: 1.6;
-  color: #666;
+  color: #2c2b2b;
   margin: 0;
   white-space: pre-line; /* 添加这一行，使 \n 生效 */
 }
