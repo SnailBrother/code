@@ -96,11 +96,19 @@
 .formTitle {
   font-size: 24px;
   font-weight: 600;
-  margin: 0 0 25px 0;
+  margin: 0 0 1px 0;
   color: #333;
   text-align: center;
-  padding-bottom: 15px;
-  border-bottom: 2px solid #c9a982;
+  padding-bottom: 0px;
+
+
+}
+.formTitleprompt {
+
+    border-bottom: 2px solid #c9a982;
+     padding-bottom: 10px;
+     font-size: small;
+      color: #4e4e4e;
 }
 
 .contactForm {

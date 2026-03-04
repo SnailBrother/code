@@ -2,7 +2,7 @@
 
 /* 全屏背景：浅灰色，突出纸张 */
 .fullPageBg {
-  min-height: 100vh;
+  min-height: 100dvh;
   background-color: #f0f2f5;
   display: flex;
   flex-direction: column;

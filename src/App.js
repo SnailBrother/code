@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Codesettings from './pages/QrcodeManagementSettings';
 import CodeCheck from './pages/CodeCheck';
 import MessageManagement from './pages/MessageManagement';
+import RdSetting from './pages/RdSetting';
 import './App.css';
 
 // 定义本地存储的 Key 常量
@@ -52,7 +53,7 @@ function App() {
         {/* 登录页：如果已登录，直接跳转到管理页 */}
         <Route
           path="/login"
-          element={isLoggedIn ? <Navigate to="/codesettings" /> : <Login onLogin={handleLogin} />}
+          element={isLoggedIn ? <Navigate to="/rdsetting" /> : <Login onLogin={handleLogin} />}
         />
 
         {/* 受保护的路由 - 操作管理页 */}
@@ -78,6 +79,17 @@ function App() {
             )
           }
         />
+        <Route
+          path="/rdsetting"
+          element={
+            isLoggedIn ? (
+              <RdSetting onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        
 
         {/* 未匹配到的路由重定向到首页 */}
         <Route path="*" element={<Navigate to="/" />} />

@@ -35,7 +35,7 @@ function QrcodeManagementSettings({ onLogout }) {
 
 
   const handleLogout = () => {
-    onLogout();
+    // onLogout();
     navigate('/');
   };
 
@@ -231,7 +231,7 @@ function QrcodeManagementSettings({ onLogout }) {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <h1 className={styles.title}>二维码数据录入与管理</h1>
+        <h1 className={styles.title}>二维码</h1>
         <button onClick={handleLogout} className={styles.logoutButton}>退出登录</button>
       </header>
 

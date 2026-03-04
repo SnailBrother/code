@@ -117,7 +117,7 @@ const MessageManagement = () => {
   return (
     <div className={styles.managementContainer}>
       <header className={styles.header}>
-        <h2>留言管理系统</h2>
+        <h2>留言:</h2>
         <div className={styles.statusBadge}>
           连接状态: 
           <span className={`${styles.dot} ${connectionStatus === 'connected' ? styles.online : styles.offline}`}></span>

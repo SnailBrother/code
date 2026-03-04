@@ -32,7 +32,7 @@ const ContactUs = () => {
     try {
       // 调用后端 API
       const response = await axios.post('http://121.4.22.55:5203/api/CodeDatabase/submitContact', formData);
-      
+
       if (response.data.success) {
         setStatus({ type: 'success', message: '提交成功！我们会尽快联系您。' });
         setFormData({ requestername: '', contact: '', description: '' }); // 重置表单
@@ -57,10 +57,10 @@ const ContactUs = () => {
               src='/Picture/home/ContactUs/1.jpg'
               alt="联系我们"
               className={styles.contactImage}
-              onError={(e) => {e.target.src='https://via.placeholder.com/600x400?text=Contact+Image';}} 
+              onError={(e) => { e.target.src = 'https://via.placeholder.com/600x400?text=Contact+Image'; }}
             />
           </div>
-          
+
           <div className={styles.contactInfo}>
             <h3 className={styles.infoTitle}>联系方式</h3>
             <ul className={styles.infoList}>
@@ -70,7 +70,7 @@ const ContactUs = () => {
               <li className={styles.infoItem}><span className={styles.label}>公司邮箱：</span><span className={styles.value}>644260249@qq.com</span></li>
               <li className={styles.infoItem}><span className={styles.label}>公司邮编：</span><span className={styles.value}>400010</span></li>
               <li className={styles.infoItem}><span className={styles.label}>客服QQ：</span><span className={styles.value}>644260249</span></li>
-              
+
               <li className={styles.qrCodeItem}>
                 <div className={styles.qrCodeWrapper}>
                   <span className={styles.qrLabel}>QQ</span>
@@ -95,39 +95,41 @@ const ContactUs = () => {
 
         {/* 右侧区域 - 联系表单 */}
         <div className={styles.rightCol}>
-          <h3 className={styles.formTitle}>请留下您的联系方式：</h3>
-          
+        
+            <h3 className={styles.formTitle}>专业评估</h3>
+            <h4 className={styles.formTitleprompt}>有任何问题？请告诉我们，我们会第一时间回复您</h4>
+         
           <form className={styles.contactForm} onSubmit={handleSubmit}>
             <div className={styles.formGroup}>
               <label className={styles.formLabel}>姓名：</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="requestername"
-                className={styles.formInput} 
+                className={styles.formInput}
                 placeholder="请输入您的姓名"
                 value={formData.requestername}
                 onChange={handleChange}
                 required
               />
             </div>
-            
+
             <div className={styles.formGroup}>
               <label className={styles.formLabel}>电话：</label>
-              <input 
-                type="tel" 
+              <input
+                type="tel"
                 name="contact"
-                className={styles.formInput} 
+                className={styles.formInput}
                 placeholder="请输入您的电话"
                 value={formData.contact}
                 onChange={handleChange}
               />
             </div>
-            
+
             <div className={styles.formGroup}>
               <label className={styles.formLabel}>描述：</label>
-              <textarea 
+              <textarea
                 name="description"
-                className={styles.formTextarea} 
+                className={styles.formTextarea}
                 placeholder="请输入您的需求描述"
                 rows="4"
                 value={formData.description}
@@ -135,7 +137,7 @@ const ContactUs = () => {
                 required
               />
             </div>
-            
+
             <button type="submit" className={styles.submitBtn} disabled={isSubmitting}>
               {isSubmitting ? '提交中...' : '提交'}
             </button>
