@@ -18,12 +18,12 @@ const Footer = () => {
               专业从事资产评估、房地产评估、土地评估等业务， 
               致力于为客户提供专业、高效的服务。
             </p>
-            <div className={styles.socialLinks}>
+            {/* <div className={styles.socialLinks}>
               <a href="#" className={styles.socialLink}>📱</a>
               <a href="#" className={styles.socialLink}>📧</a>
               <a href="#" className={styles.socialLink}>📞</a>
               <a href="#" className={styles.socialLink}>🏢</a>
-            </div>
+            </div> */}
           </div>
 
           {/* 快速链接列 */}

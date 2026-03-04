@@ -13,7 +13,7 @@ function CodeCheck() {
   const [data, setData] = useState(null);
   const [error, setError] = useState('');
   const [qrUrl, setQrUrl] = useState('');
-const logoImg = '/RuidaLogo.jpg';
+  const logoImg = '/RuidaLogo.jpg';
   useEffect(() => {
     const fetchData = async () => {
       if (!code) {
@@ -48,7 +48,7 @@ const logoImg = '/RuidaLogo.jpg';
             // 1. errorCorrectionLevel: 'H' (最高容错率，允许遮挡 30%)
             // 2. width: 增大尺寸 (例如 250)，以便中间留出空间后边缘依然清晰
             const dataUrl = await QRCode.toDataURL(fullUrl, {
-              width: 260, 
+              width: 260,
               margin: 2,
               color: {
                 dark: '#000000',
@@ -56,7 +56,7 @@ const logoImg = '/RuidaLogo.jpg';
               },
               errorCorrectionLevel: 'H' // 必须设为 H 以保证扫码成功率
             });
-            
+
             if (dataUrl) {
               setQrImageSrc(dataUrl);
               console.log('二维码生成成功');
@@ -115,39 +115,22 @@ const logoImg = '/RuidaLogo.jpg';
     return num.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return '-';
-  const date = new Date(dateStr);
-  if (isNaN(date.getTime())) return '-';
-  
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1; // getMonth() 返回 0-11
-  const day = date.getDate();
-  
-  return `${year}年${month}月${day}日`;
-};
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '-';
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return '-';
+
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // getMonth() 返回 0-11
+    const day = date.getDate();
+
+    return `${year}年${month}月${day}日`;
+  };
 
   return (
     <div className={styles.fullPageBg}>
       <div className={styles.paperContainer}>
         <div className={styles.paper}>
-
-          {/* 公章 */}
-          <div className={styles.stamp}>
-            <img
-              src="/OfficialSeal.png"
-              alt="官方公章"
-              className={styles.stampImage}
-              onError={(e) => {
-                e.target.style.display = 'none';
-                console.warn('公章图片加载失败');
-              }}
-            />
-          </div>
-
-          <div className={styles.paperHeader}>
-            <h1 className={styles.reportTitle}>重庆瑞达资产评估房地产土地估价有限公司</h1>
-          </div>
 
           {/* 二维码区域 - 修改为相对定位容器，以便绝对定位 Logo */}
           <div className={styles.qrSection}>
@@ -166,54 +149,79 @@ const formatDate = (dateStr) => {
               </div>
             )}
             <div className={styles.verifiedBadge}>
-             校验码:{code}
+              校验码:{code}
             </div>
           </div>
 
-          <div className={styles.infoGrid}>
-            <div className={styles.infoRow}>
-              <span className={styles.label}>报告编号：</span>
-              <span className={styles.value}>{data.ReportNumber || '-'}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.label}>项目名称：</span>
-              <span className={styles.value}>{data.ProjectName || '-'}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.label}>评估金额：</span>
-              <span className={styles.value}>¥ {formatAmount(data.EvaluationAmount)}元</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.label}>报告时间：</span>
-              <span className={styles.value}>{formatDate(data.ReportTime)}</span>
-            </div>
-            <div className={styles.infoRow}>
-              <span className={styles.label}>评估机构名称：</span>
-              <span className={styles.value}>重庆瑞达资产评估房地产土地估价有限公司</span>
-            </div>
+
+          {/* 公章 */}
+          <div className={styles.stamp}>
+            <img
+              src="/OfficialSeal.png"
+              alt="官方公章"
+              className={styles.stampImage}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                console.warn('公章图片加载失败');
+              }}
+            />
           </div>
 
-          <div className={styles.signSection}>
-            <div className={styles.signRow}>
-              <span className={styles.label}>签字人员：</span>
-              <span className={styles.value}>
-                {data.SignerA_Name || '未签字'}（编号：{data.SignerA_Number || '-'}）
-              </span>
-            </div>
-            <div className={styles.signRow}>
-              <span className={styles.label}></span>
-              <span className={styles.value}>
-                {data.SignerB_Name || '未签字'}（编号：{data.SignerB_Number || '-'}）
-              </span>
-            </div>
+          <div className={styles.paperHeader}>
+            <h1 className={styles.reportTitle}>重庆瑞达资产评估房地产土地估价有限公司</h1>
           </div>
 
-          <div className={styles.footer}>
-            <p>本查验仅供核实报告真伪使用，谨防假冒网站。</p>
-            <p style={{ wordBreak: 'break-all', fontSize: '10px', color: '#999' }}>
-              {qrUrl}
-            </p>
-            <p>查验时间：{new Date().toLocaleString('zh-CN')}</p>
+          <div className={styles.informationContainer}>
+
+            <div className={styles.infoGrid}>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>报告编号：</span>
+                <span className={styles.value}>{data.ReportNumber || '-'}</span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>项目名称：</span>
+                <span className={styles.value}>{data.ProjectName || '-'}</span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>评估金额：</span>
+                <span className={styles.value}>¥ {formatAmount(data.EvaluationAmount)}元</span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>报告时间：</span>
+                <span className={styles.value}>{formatDate(data.ReportTime)}</span>
+              </div>
+              <div className={styles.infoRow}>
+                <span className={styles.label}>评估机构名称：</span>
+                <span className={styles.value}>重庆瑞达资产评估房地产土地估价有限公司</span>
+              </div>
+            </div>
+
+            <div className={styles.signSection}>
+              <div className={styles.signRow}>
+                <span className={styles.label}>签字人员：</span>
+                <span className={styles.value}>
+                  {data.SignerA_Name || '未签字'}（编号：{data.SignerA_Number || '-'}）
+                </span>
+              </div>
+              <div className={styles.signRow}>
+                <span className={styles.label}></span>
+                <span className={styles.value}>
+                  {data.SignerB_Name || '未签字'}（编号：{data.SignerB_Number || '-'}）
+                </span>
+              </div>
+            </div>
+
+            <div className={styles.footer}>
+              <p>本查验仅供核实报告真伪使用，谨防假冒网站。</p>
+              <p style={{ wordBreak: 'break-all', fontSize: '10px', color: '#999' }}>
+                官网查询地址：www.cqrdpg.com
+              </p>
+              {/* <p style={{ wordBreak: 'break-all', fontSize: '10px', color: '#999' }}>
+               这是当前网页地址 {qrUrl}
+              </p> */}
+              <p>查验时间：{new Date().toLocaleString('zh-CN')}</p>
+            </div>
+
           </div>
 
         </div>

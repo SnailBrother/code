@@ -114,6 +114,11 @@
   margin-bottom: 20px;
   position: relative;
   z-index: 2;
+ 
+  margin-top: 50px;
+}
+.informationContainer {
+  margin-top: 80px;
 }
 
 .reportTitle {
@@ -123,19 +128,19 @@
   letter-spacing: 2px;
   font-weight: 700;
 }
-
+/* 5. 调整 verifiedBadge (校验码文字): 避免被二维码遮挡，靠左显示或向下移 */
 .verifiedBadge {
   display: inline-flex;
   align-items: center;
-  margin-top: 0px;
-
-  /* border: 1px solid #b7eb8f; */
   color: #4f504f;
-  padding: 1px;
+  padding: 4px 15px;
   border-radius: 20px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
-
+  background: #f9f9f900; /* 加个淡背景让它更清晰 */
+  /* 如果二维码在右上，文字默认会在下面，如果想让它也在右边但在二维码下面： */
+  align-self: flex-end; 
+  margin-top: 95px; /* 给二维码留出空间 */
 }
 
 
@@ -193,68 +198,61 @@
 }
 
 /* 二维码区域 */
+/* 1. 修改 qrSection: 设置为相对定位，高度自适应，不再强制居中 */
 .qrSection {
+  position: relative; /* 关键：作为二维码绝对定位的参考父级 */
+  width: 100%;
+  min-height: 110px; /* 预留一点高度防止重叠，略大于二维码高度 */
+  margin-bottom: 20px; /* 与下方内容的间距 */
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1px;
-  margin: 1px 0;
-  border-radius: 8px;
-  text-align: center;
-  min-height: 220px;
-  /* 稍微增加高度以适应新布局 */
-
+  justify-content: flex-end; /* 让内部的非绝对定位元素（如文字）靠右，如果需要 */
+  align-items: flex-start;
 }
 
 /* 新增：二维码包装器 (相对定位) */
+/* 2. 修改 qrWrapper: 固定大小为 100x100，绝对定位到右上角 */
 .qrWrapper {
-  position: relative;
-  width: 180px;
-  /* 显示宽度，与下面 qrImage 一致 */
-  height: 180px;
-  margin: 0 auto;
-  padding: 0px;
+  position: absolute; /* 关键：脱离文档流，自由定位 */
+  top: 0;             /* 贴顶 */
+  right: 0;           /* 贴右 */
+  width: 100px;       /* 固定宽度 100px */
+  height: 100px;      /* 固定高度 100px */
+  margin: 0;          /* 清除外边距 */
+  padding: 0;
+  z-index: 5;         /* 确保在文字上方，但在公章下方(如果公章z-index更高) */
 }
 
 /* 新增：二维码图片样式 */
+/* 3. 修改 qrImage: 填满容器 */
 .qrImage {
   width: 100%;
   height: 100%;
   display: block;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
-  /* 确保打印时颜色准确 */
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
 }
 
 /* 新增：Logo 覆盖层 (绝对定位居中) */
+/* 4. 修改 qrLogoOverlay: 适配新的尺寸，比例保持不变 (约25%-30%) */
 .qrLogoOverlay {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 45px;
-  /* Logo 容器大小，约为二维码宽度的 25% */
-  height: 45px;
+  width: 28px;        /* 100px * 0.28 ≈ 28px，根据视觉微调 */
+  height: 28px;
   background-color: #ffffff;
-  /* 白色背景遮挡下方的二维码点 */
   border-radius: 4px;
-  /* 可选：圆角 */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
-  /* 内边距让 Logo 不至于太满 */
+  padding: 2px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* 轻微阴影增加层次感 */
-
-  /* 打印适配 */
   -webkit-print-color-adjust: exact;
   print-color-adjust: exact;
   background-color: #fff !important;
-  /* 强制打印背景色 */
 }
 
 /* 新增：Logo 图片样式 */
@@ -405,6 +403,11 @@
     overflow: visible;
   }
 
+  
+  .qrSection {
+    min-height: 110px;
+    margin-bottom: 20px;
+  }
   .qrImage {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;

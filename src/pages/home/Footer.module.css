@@ -2,7 +2,6 @@
 .footer {
   width: 100%;
  
-  height: auto;
   background-color: #ffffff; /* 白色主色调 */
   color: #333333; /* 深灰色文字 */
   display: flex;
@@ -10,19 +9,19 @@
   justify-content: center;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-top: 1px solid #f0f0f0; /* 极浅的灰色边框 */
-  box-sizing: border-box;
     height: 100dvh;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .footerContainer {
   max-width: 1200px;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
   padding: 60px 0 40px 0;
   display: flex;
   flex-direction: column;
-  min-height: 80vh; /* 内部内容也尽量占满高度 */
+
 }
 
 /* 顶部区域：四列布局 */
@@ -201,50 +200,3 @@
   }
 }
 
-@media (max-width: 768px) {
-  .footer {
-    min-height: auto;
-    height: auto;
-  }
-  
-  .footerContainer {
-    min-height: auto;
-    padding: 30px 0 20px 0;
-  }
-  
-  .footerTop {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  
-  .footerBottom {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .beian {
-    justify-content: center;
-  }
-  
-  .columnTitle::after {
-    left: 0;
-    transform: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .footerContainer {
-    width: 95%;
-  }
-  
-  .socialLinks {
-    justify-content: center;
-  }
-  
-  .contactItem {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 5px;
-  }
-}

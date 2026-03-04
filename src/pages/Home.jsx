@@ -340,7 +340,7 @@ const HomeOptions = () => {
       </div>
 
       {/* 页面指示器 */}
-      <div className={styles.indicators}>
+      <div className={`${styles.indicators} ${currentPage === 0 ? styles.hideOnFirst : ''}`}>
         {Array.from({ length: totalPages }).map((_, index) => (
           <button
             key={index}
