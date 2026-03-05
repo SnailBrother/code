@@ -31,7 +31,7 @@ const ContactUs = () => {
 
     try {
       // 调用后端 API
-      const response = await axios.post('http://121.4.22.55:5203/api/CodeDatabase/submitContact', formData);
+      const response = await axios.post('/api/CodeDatabase/submitContact', formData);
 
       if (response.data.success) {
         setStatus({ type: 'success', message: '提交成功！我们会尽快联系您。' });

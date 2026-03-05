@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import QRCode from 'qrcode';
 // 引入 Logo 图片 (假设放在 public 文件夹下)
+// ✅ 1. 引入新库
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 import styles from './CodeCheck.module.css';
 
@@ -14,6 +17,53 @@ function CodeCheck() {
   const [error, setError] = useState('');
   const [qrUrl, setQrUrl] = useState('');
   const logoImg = '/RuidaLogo.jpg';
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false); // 新增：下载 loading 状态
+  const handleDownloadPdf = async () => {
+    setIsGeneratingPdf(true);
+    try {
+      const element = document.querySelector(`.${styles.paper}`);
+      if (!element) {
+        alert('未找到可打印的文档区域');
+        return;
+      }
+
+      // 1. 使用 html2canvas 将 DOM 节点转换为 Canvas
+      // scale: 2 可以提高清晰度 (Retina 屏优化)
+      // useCORS: true 允许加载跨域图片 (如果 Logo 或公章是跨域的)
+      const canvas = await html2canvas(element, {
+        scale: 2, 
+        useCORS: true,
+        logging: false,
+        backgroundColor: '#ffffff', // 强制白色背景
+        windowWidth: element.scrollWidth,
+        windowHeight: element.scrollHeight
+      });
+
+      // 2. 初始化 jsPDF
+      // 'p' = portrait (纵向), 'mm' = 单位, 'a4' = 纸张格式
+      const pdf = new jsPDF('p', 'mm', 'a4');
+
+      // 3. 计算缩放比例以适应 A4 纸
+      const imgWidth = 210; // A4 宽度 210mm
+      const pageHeight = 295; // A4 高度 297mm (留一点边距)
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      // 4. 将 Canvas 内容添加到 PDF
+      // 参数：图片数据，格式，x, y, 宽，高
+      pdf.addImage(canvas.toDataURL('image/jpeg', 1.0), 'JPEG', 0, 0, imgWidth, imgHeight);
+
+      // 5. 保存文件
+      // 文件名：报告编号_查验.pdf
+      const fileName = data.ReportNumber ? `报告${data.ReportNumber}_查验.pdf` : '查验报告.pdf';
+      pdf.save(fileName);
+
+    } catch (err) {
+      console.error('PDF 生成失败:', err);
+      alert('生成 PDF 失败，请检查控制台错误或尝试使用浏览器打印功能保存为 PDF。');
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       if (!code) {
@@ -216,7 +266,7 @@ function CodeCheck() {
             <div className={styles.footer}>
               <p>本查验仅供核实报告真伪使用，谨防假冒网站。</p>
               <p style={{ wordBreak: 'break-all', fontSize: '10px', color: '#999' }}>
-                官网查询地址：www.cqrdpg.com
+                官网查询地址：www.cqrdpg.com，
               </p>
               {/* <p style={{ wordBreak: 'break-all', fontSize: '10px', color: '#999' }}>
                这是当前网页地址 {qrUrl}
@@ -231,7 +281,14 @@ function CodeCheck() {
         </div>
  <div className={styles.actionBar}>
           <button onClick={() => window.print()} className={styles.printBtn}>🖨️ 打印</button>
-          <Link to="/" className={styles.backBtn}>🏠 首页</Link>
+          <button 
+            onClick={handleDownloadPdf} 
+            className={styles.downloadBtn} // 需要新增一个样式类
+            disabled={isGeneratingPdf}
+          >
+            {isGeneratingPdf ? '⏳ 生成中...' : '📄 下载 PDF'}
+          </button>
+           <Link to="/" className={styles.backBtn}>🏠 首页</Link>
         </div>
 
       </div>

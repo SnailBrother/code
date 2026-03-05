@@ -2,8 +2,8 @@
 .managementContainer {
     padding: 20px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f7fa;
-    height: 100dvh;
+    background-color: transparent;
+    height: calc(100dvh - 180px);
     box-sizing: border-box;
   }
   
@@ -12,7 +12,7 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    background: white;
+  
     padding: 15px 20px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -20,13 +20,13 @@
   
   .header h2 {
     margin: 0;
-    color: #333;
+        color: #f5f5f5;
     font-size: 1.5rem;
   }
   
   .statusBadge {
     font-size: 0.9rem;
-    color: #666;
+       color: #f5f5f5;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -43,7 +43,7 @@
   .offline { background-color: #e74c3c; }
   
   .tableWrapper {
-    background: white;
+   
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     overflow-x: auto;
@@ -62,21 +62,22 @@
   }
   
   .messageTable th {
-    background-color: #f8f9fa;
-    color: #555;
+     
+        color: #f5f5f5;
     font-weight: 600;
     text-transform: uppercase;
     font-size: 0.85rem;
   }
   
   .unreadRow {
-    background-color: #fffdf0; /* 淡黄色背景突出未读 */
+    background-color: #eeeeeb50; 
+    /* 淡黄色背景突出未读 */
     font-weight: 500;
   }
   
   .readRow {
-    background-color: #ffffff;
-    color: #888;
+   
+    color: #f5f5f5;
   }
   
   .descCell {
@@ -120,7 +121,7 @@
   
   .emptyRow {
     text-align: center;
-    color: #999;
+       color: #f5f5f5;
     padding: 40px !important;
   }
   

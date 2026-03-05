@@ -5,7 +5,7 @@
   display: flex;
   overflow: hidden;
   /* 深色背景图，模拟参考代码的山脉背景，这里用渐变代替以防图片缺失 */
-  background: linear-gradient(135deg, #1a1a1e 0%, #16213e 50%, #0f3460 100%);
+  /* background: linear-gradient(135deg, #1a1a1e 0%, #16213e 50%, #0f3460 100%); */
   background-size: cover;
   position: relative;
   font-family: 'Microsoft YaHei', sans-serif;
@@ -17,9 +17,9 @@
   width: 250px;
   height: 100%;
   /* 核心：深色半透明 + 毛玻璃模糊 */
-  background-color: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  background-color: rgba(0, 0, 0, 0.075); 
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
   display: flex;
   flex-direction: column;
   transition: width 0.5s ease;
@@ -151,8 +151,8 @@
 /* ================= 右侧主内容区 (Right Box) ================= */
 .rightBox {
   flex: 1;
-  background-color: rgba(15, 15, 17, 0.85); /* 稍微透一点背景 */
-  backdrop-filter: blur(10px);
+  background-color: rgba(15, 15, 17, 0.171); /* 稍微透一点背景 */
+  backdrop-filter: blur(3px);
   position: relative;
   display: flex;
   flex-direction: column;
@@ -215,7 +215,7 @@
 /* 内容区域容器 */
 .contentArea {
   flex: 1;
-  margin: 0 35px 35px 35px;
+  margin: 0 0px 0px 0px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -236,8 +236,8 @@
 
 /* ================= 折叠控制器 (Handler) ================= */
 .handler {
-  width: 12px;
-  height: 60px;
+  width: 5px;
+  height: 30px;
   position: absolute;
   left: 10px;
   top: 50%;

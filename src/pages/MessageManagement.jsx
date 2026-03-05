@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import styles from './MessageManagement.module.css';
 import axios from 'axios';
 
-const SOCKET_URL = 'http://121.4.22.55:5203';
+
 
 const MessageManagement = () => {
   const [messages, setMessages] = useState([]);
@@ -12,7 +12,9 @@ const MessageManagement = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(SOCKET_URL, {
+    // ✅ 1. Socket.io连接改为相对路径（走Nginx的/socket.io/代理）
+    // 不传URL则默认连接当前页面的域名（即Nginx的localhost:80）
+    const newSocket = io('/', {
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: 5,
@@ -23,7 +25,7 @@ const MessageManagement = () => {
 
     const fetchInitialData = async () => {
       try {
-        const res = await axios.get(`${SOCKET_URL}/api/CodeDatabase/getMessages`);
+        const res = await axios.get(`/api/CodeDatabase/getMessages`);
         if (res.data.success) {
           setMessages(res.data.data);
         }
@@ -77,7 +79,7 @@ const MessageManagement = () => {
 
   const handleMarkAsRead = async (id) => {
     try {
-      await axios.put(`${SOCKET_URL}/api/CodeDatabase/markAsRead/${id}`);
+      await axios.put(`/api/CodeDatabase/markAsRead/${id}`);
       setMessages(prev => prev.map(msg => 
         msg.id === id ? { ...msg, isread: 1, responded: new Date().toISOString() } : msg
       ));
@@ -93,7 +95,7 @@ const MessageManagement = () => {
     }
 
     try {
-      await axios.delete(`${SOCKET_URL}/api/CodeDatabase/deleteMessage/${id}`);
+      await axios.delete(`/api/CodeDatabase/deleteMessage/${id}`);
       // 乐观更新：先在前端移除，等待 socket 确认或直接移除
       setMessages(prev => prev.filter(msg => msg.id !== id));
     } catch (err) {

@@ -16,8 +16,9 @@ const Icon = ({ name, className }) => {
     collapse: '◀' 
   };
   return <span className={className}>{icons[name] || ''}</span>;
-};
 
+};
+const bgImageUrl='./Picture/image1.png'; 
 const AVATAR_URL = '/RuidaLogo.jpg';
 const USER_NAME = "瑞达管理员";
 const MENU_ITEMS = [
@@ -44,7 +45,14 @@ const RdSetting = () => {
   const currentTagLabel = MENU_ITEMS.find(item => item.id === activeTab)?.label || '设置';
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container}
+    style={{
+        backgroundImage: `url(${bgImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
+      >
       {/* 左侧导航栏 */}
       <aside className={`${styles.leftBox} ${isSidebarCollapsed ? styles.collapsed : ''}`}>
         <ul className={styles.navList}>

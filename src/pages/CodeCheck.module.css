@@ -114,9 +114,10 @@
   margin-bottom: 20px;
   position: relative;
   z-index: 2;
- 
+
   margin-top: 50px;
 }
+
 .informationContainer {
   margin-top: 80px;
 }
@@ -128,6 +129,7 @@
   letter-spacing: 2px;
   font-weight: 700;
 }
+
 /* 5. 调整 verifiedBadge (校验码文字): 避免被二维码遮挡，靠左显示或向下移 */
 .verifiedBadge {
   display: inline-flex;
@@ -137,10 +139,12 @@
   border-radius: 20px;
   font-size: 12px;
   font-weight: 500;
-  background: #f9f9f900; /* 加个淡背景让它更清晰 */
+  background: #f9f9f900;
+  /* 加个淡背景让它更清晰 */
   /* 如果二维码在右上，文字默认会在下面，如果想让它也在右边但在二维码下面： */
-  align-self: flex-end; 
-  margin-top: 95px; /* 给二维码留出空间 */
+  align-self: flex-end;
+  margin-top: 95px;
+  /* 给二维码留出空间 */
 }
 
 
@@ -200,26 +204,37 @@
 /* 二维码区域 */
 /* 1. 修改 qrSection: 设置为相对定位，高度自适应，不再强制居中 */
 .qrSection {
-  position: relative; /* 关键：作为二维码绝对定位的参考父级 */
+  position: relative;
+  /* 关键：作为二维码绝对定位的参考父级 */
   width: 100%;
-  min-height: 110px; /* 预留一点高度防止重叠，略大于二维码高度 */
-  margin-bottom: 20px; /* 与下方内容的间距 */
+  min-height: 110px;
+  /* 预留一点高度防止重叠，略大于二维码高度 */
+  margin-bottom: 20px;
+  /* 与下方内容的间距 */
   display: flex;
-  justify-content: flex-end; /* 让内部的非绝对定位元素（如文字）靠右，如果需要 */
+  justify-content: flex-end;
+  /* 让内部的非绝对定位元素（如文字）靠右，如果需要 */
   align-items: flex-start;
 }
 
 /* 新增：二维码包装器 (相对定位) */
 /* 2. 修改 qrWrapper: 固定大小为 100x100，绝对定位到右上角 */
 .qrWrapper {
-  position: absolute; /* 关键：脱离文档流，自由定位 */
-  top: 0;             /* 贴顶 */
-  right: 0;           /* 贴右 */
-  width: 100px;       /* 固定宽度 100px */
-  height: 100px;      /* 固定高度 100px */
-  margin: 0;          /* 清除外边距 */
+  position: absolute;
+  /* 关键：脱离文档流，自由定位 */
+  top: 0;
+  /* 贴顶 */
+  right: 0;
+  /* 贴右 */
+  width: 100px;
+  /* 固定宽度 100px */
+  height: 100px;
+  /* 固定高度 100px */
+  margin: 0;
+  /* 清除外边距 */
   padding: 0;
-  z-index: 5;         /* 确保在文字上方，但在公章下方(如果公章z-index更高) */
+  z-index: 5;
+  /* 确保在文字上方，但在公章下方(如果公章z-index更高) */
 }
 
 /* 新增：二维码图片样式 */
@@ -241,7 +256,8 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 28px;        /* 100px * 0.28 ≈ 28px，根据视觉微调 */
+  width: 28px;
+  /* 100px * 0.28 ≈ 28px，根据视觉微调 */
   height: 28px;
   background-color: #ffffff;
   border-radius: 4px;
@@ -357,6 +373,37 @@
   border-color: #999;
   background: #f5f5f5;
 }
+/* 在 .backBtn 后面添加 */
+
+.downloadBtn {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  background: #52c41a; /* 绿色，代表下载/成功 */
+  color: white;
+  box-shadow: 0 4px 10px rgba(82, 196, 26, 0.25);
+}
+
+.downloadBtn:hover {
+  background: #73d13d;
+  transform: translateY(-2px);
+}
+
+.downloadBtn:disabled {
+  background: #d9d9d9;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+
 
 /* 加载动画 */
 .loadingBox {
@@ -388,143 +435,220 @@
     transform: rotate(360deg);
   }
 }
+
 @media (max-width: 768px) {
-  .label, 
+
+  .label,
   .value,
   .footer {
     font-size: 12px;
   }
-  .infoGrid, .informationContainer {
+
+  .infoGrid,
+  .informationContainer {
     padding-top: 1px;
     padding-bottom: 1px;
   }
+
   .label {
-  width: 70px;
+    width: 70px;
   }
 
   .paperHeader {
-      padding-bottom: 5px;
-  margin-bottom: 30px;
+    padding-bottom: 5px;
+    margin-bottom: 30px;
 
   }
-.reportTitle {
-  font-size: 15px;
-}
-.informationContainer {
+
+  .reportTitle {
+    font-size: 15px;
+  }
+
+  .informationContainer {
     margin-top: 10px;
 
     width: 100%;
-}
+  }
 
-.stamp {
-  position: absolute;
-  bottom: 380px;
-  left: 150px;
-  transform: rotate(-15deg);
-  opacity: 0.9;
-  pointer-events: none;
-  z-index: 10;
-  width: 140px;
-  height: 140px;
-}
-.infoGrid {
- 
-  gap: 10px;
+  .stamp {
+    position: absolute;
+    bottom: 380px;
+    left: 150px;
+    transform: rotate(-15deg);
+    opacity: 0.9;
+    pointer-events: none;
+    z-index: 10;
+    width: 140px;
+    height: 140px;
+  }
 
-}
-.infoRow {
-  line-height: 1.2;
- 
-}
+  .infoGrid {
 
-.paper {
-  padding: 40px 20px;
- 
-}
+    gap: 10px;
+
+  }
+
+  .infoRow {
+    line-height: 1.2;
+
+  }
+
+  .paper {
+    padding: 40px 20px;
+
+  }
 
 }
 
 /* 打印适配 */
+
+/* ================= 打印专用样式优化 ================= */
 @media print {
+.actionBar {
+    display: none !important;
+  }
+  /* 1. 强制设置页面边距和尺寸 */
   @page {
-    margin: 1cm;
+    margin: 1.5cm 2cm;
+    /* 上下1.5cm, 左右2cm，避免内容太靠边被切 */
     size: A4;
   }
 
+  /* 2. 重置身体和 HTML，去除屏幕特有的背景 */
   body,
   html {
-    background: #fff;
-    height: auto;
-    overflow: visible;
+    background: #fff !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  
-  .qrSection {
-    min-height: 110px;
-    margin-bottom: 20px;
-  }
-  .qrImage {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+  /* 3. 隐藏不需要打印的元素 */
+  .actionBar,
+  .homeBtn,
+  .loadingBox,
+  .fullPageBg>div:not(.paperContainer) {
+    display: none !important;
   }
 
+  /* 4. 容器调整：去除屏幕上的阴影、圆角和最大宽度限制 */
   .fullPageBg {
-    background: none;
-    padding: 0;
-    display: block;
-    min-height: auto;
+    background: none !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    display: block !important;
+  }
+
+  .paperContainer {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* 5. 纸张主体关键修复 */
+  .paper {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    /* 关键：恢复 padding，否则内容会贴边。屏幕上是 60px 70px，打印时稍微减小以适应页边距 */
+    padding: 20px 15px !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    position: relative !important;
+    /* 确保绝对定位子元素参考它 */
+  }
+
+  /* 6. 修复二维码区域 */
+  .qrSection {
+    min-height: 110px !important;
+    margin-bottom: 20px !important;
+    page-break-inside: avoid;
+    /* 防止二维码被分页切断 */
+  }
+
+  .qrWrapper {
+    /* 确保打印时二维码位置固定 */
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    width: 100px !important;
+    height: 100px !important;
+    z-index: 10 !important;
+  }
+
+  .qrImage,
+  .logoImage,
+  .stampImage {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    max-width: 100% !important;
   }
 
   .qrLogoOverlay {
     background-color: #fff !important;
-    /* 确保打印时有白色底 */
-    box-shadow: none;
-    /* 打印时去掉阴影更清晰 */
+    box-shadow: none !important;
   }
 
-  .paperContainer {
-    max-width: 100%;
-    margin: 0;
-    width: 100%;
-  }
-
-  .paper {
-    box-shadow: none;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: auto;
-    border: none;
-    overflow: visible;
-  }
-
-  .actionBar,
-  .homeBtn {
-    display: none !important;
-  }
-
+  /* 7. 修复公章位置 (打印时重新校准) */
   .stamp {
-    opacity: 1;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    position: absolute;
-    bottom: 150px;
-    right: 70px;
-    z-index: 1;
+    /* 屏幕上是 bottom: 330px，打印时可能需要调整，因为 padding 变了 */
+    /* 建议根据实际打印效果微调这里的 bottom/right 值 */
+    bottom: 150px !important;
+    left: 150px !important;
+    /* left: auto !important;  */
+    /* 取消屏幕上的 left 定位，改用 right */
+    transform: rotate(-15deg) !important;
+    opacity: 0.85 !important;
+    /* 打印时稍微淡一点更像真章 */
+    z-index: 3 !important;
+    /* 确保在文字上方 */
+    width: 130px !important;
+    height: 130px !important;
   }
 
-  .stampImage {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-    mix-blend-mode: multiply;
-  }
-
+  /* 8. 文字内容保护 */
   .infoGrid,
   .signSection,
-  .qrSection,
+  .paperHeader,
   .footer {
-    position: relative;
-    z-index: 2;
-    background: transparent;
+    position: relative !important;
+    z-index: 2 !important;
+    /* 确保公章在文字上面 */
+    background: transparent !important;
+    page-break-inside: avoid;
+    /* 尽量不让一行字跨页 */
+  }
+
+  .reportTitle {
+    font-size: 22pt !important;
+    /* 打印时使用 pt 单位更准确 */
+    text-align: center !important;
+    margin-bottom: 30px !important;
+  }
+
+  .infoRow,
+  .signRow {
+    font-size: 12pt !important;
+    line-height: 2 !important;
+    /* border-bottom: 1px solid #ddd !important; */
+    /* 打印时线条可能需要加深 */
+  }
+
+  .label {
+    color: #000 !important;
+    /* 强制黑色，节省墨水且清晰 */
+    font-weight: bold !important;
+  }
+
+  .footer {
+    margin-top: 40px !important;
+    font-size: 9pt !important;
+    border-top: 1px solid #ccc !important;
   }
 }
