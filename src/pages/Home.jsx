@@ -78,20 +78,77 @@ const HomeOptions = () => {
   }, [currentPage, goToPage]);
 
   // 鼠标滚轮事件
+   // 鼠标滚轮事件 - 修复内部滚动冲突
   useEffect(() => {
     const handleWheel = (e) => {
       if (isAnimating) return;
 
-      // 检测用户是否正在尝试缩放
+      // 检测用户是否正在尝试缩放 (Ctrl/Meta + 滚轮)
       if (e.ctrlKey || e.metaKey) {
         return;
       }
 
+      // 1. 找到实际触发滚轮的 DOM 元素
+      // e.target 可能是内部的某个 div, p, 或者 pageContent 本身
+      let target = e.target;
+      
+      // 向上遍历，直到找到具有滚动能力的祖先元素 (即我们的 pageContent) 或者到达 containerRef
+      while (target && target !== containerRef.current) {
+        // 检查当前元素是否可以垂直滚动
+        const isScrollable = target.scrollHeight > target.clientHeight;
+        const hasOverflowY = window.getComputedStyle(target).overflowY === 'auto' || 
+                             window.getComputedStyle(target).overflowY === 'scroll';
+
+        if (isScrollable && hasOverflowY) {
+          break; // 找到了最近的可滚动容器
+        }
+        target = target.parentElement;
+      }
+
+      // 如果没找到特定的可滚动容器，或者目标就是 containerRef 本身，则默认为当前页的 pageContent
+      if (!target || target === containerRef.current) {
+        const container = containerRef.current;
+        if (!container || !container.children[currentPage]) return;
+        target = container.children[currentPage].querySelector(`.${styles.pageContent}`) || container.children[currentPage];
+      }
+
+      // 2. 关键判断：如果目标元素还有滚动空间，则允许默认行为 (内部滚动)，不翻页
+      if (target && target !== containerRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = target;
+        
+        // 容忍度，防止浮点数计算误差
+        const isAtTop = scrollTop <= 1; 
+        const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+        // 向下滚动 (deltaY > 0)
+        if (e.deltaY > 0) {
+          if (!isAtBottom) {
+            // 还没滚到底，让用户继续滚内部内容，直接返回，不 preventDefault
+            return;
+          }
+          // 已经到底了，准备翻页
+          e.preventDefault();
+          nextPage();
+          return;
+        } 
+        // 向上滚动 (deltaY < 0)
+        else if (e.deltaY < 0) {
+          if (!isAtTop) {
+            // 还没滚到顶，让用户继续滚内部内容
+            return;
+          }
+          // 已经到顶了，准备翻页
+          e.preventDefault();
+          prevPage();
+          return;
+        }
+      }
+
+      // 3. 如果目标就是整个大容器 (没有内部滚动条的情况)，执行原有逻辑
       const container = containerRef.current;
       if (!container || !container.children[currentPage]) return;
-
+      
       const currentPageElement = container.children[currentPage].querySelector(`.${styles.pageContent}`) || container.children[currentPage];
-
       if (!currentPageElement) return;
 
       const { scrollTop, scrollHeight, clientHeight } = currentPageElement;
@@ -99,21 +156,18 @@ const HomeOptions = () => {
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
 
       if (e.deltaY > 0) {
-        if (!isAtBottom) {
-          return;
-        }
+        if (!isAtBottom) return;
         e.preventDefault();
         nextPage();
       } else if (e.deltaY < 0) {
-        if (!isAtTop) {
-          return;
-        }
+        if (!isAtTop) return;
         e.preventDefault();
         prevPage();
       }
     };
 
     const container = containerRef.current;
+    // 注意：这里必须用 passive: false 才能调用 preventDefault
     if (container) {
       container.addEventListener('wheel', handleWheel, { passive: false });
     }
@@ -123,40 +177,101 @@ const HomeOptions = () => {
         container.removeEventListener('wheel', handleWheel);
       }
     };
-  }, [nextPage, prevPage, isAnimating]);
+  }, [nextPage, prevPage, isAnimating, currentPage]); // 依赖项中加入 currentPage 以确保获取正确的子元素
 
   // 触摸事件
+  // 触摸事件 - 修复手机端内部滚动冲突
   useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    let startY = 0;
+    let startScrollTop = 0;
+    let currentScrollElement = null;
+
     const handleTouchStart = (e) => {
-      touchStartY.current = e.touches[0].clientY;
+      // 1. 记录手指起始位置
+      startY = e.touches[0].clientY;
+
+      // 2. 【关键】找到当前正在滚动的内部元素
+      // 从触发事件的元素向上查找，直到找到有滚动条的元素
+      let target = e.target;
+      while (target && target !== container) {
+        const isScrollable = target.scrollHeight > target.clientHeight;
+        const overflowY = window.getComputedStyle(target).overflowY;
+        if (isScrollable && (overflowY === 'auto' || overflowY === 'scroll')) {
+          currentScrollElement = target;
+          break;
+        }
+        target = target.parentElement;
+      }
+
+      // 如果没找到特定的滚动元素，就默认为当前页面的 pageContent
+      if (!currentScrollElement) {
+        const pageNode = container.children[currentPage];
+        if (pageNode) {
+          currentScrollElement = pageNode.querySelector(`.${styles.pageContent}`) || pageNode;
+        }
+      }
+
+      // 3. 记录该元素当前的滚动位置
+      if (currentScrollElement) {
+        startScrollTop = currentScrollElement.scrollTop;
+      }
     };
 
     const handleTouchEnd = (e) => {
-      if (isAnimating) return;
+      if (isAnimating || !currentScrollElement) return;
 
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaY = touchStartY.current - touchEndY;
+      const endY = e.changedTouches[0].clientY;
+      const deltaY = startY - endY; // 正数表示向上滑，负数表示向下滑
 
-      if (deltaY > 50) {
-        nextPage();
-      } else if (deltaY < -50) {
+      // 获取当前滚动元素的状态
+      const { scrollTop, scrollHeight, clientHeight } = currentScrollElement;
+      
+      // 判断边界 (增加一点容错值 1px)
+      const isAtTop = scrollTop <= 1;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1;
+
+      // --- 核心逻辑判断 ---
+
+      // 情况 A: 用户向下滑动 (deltaY < 0)，想看上面的内容
+      if (deltaY < -50) { 
+        if (!isAtTop) {
+          // 内部内容还没到顶，允许浏览器默认行为（内部滚动），阻止翻页
+          return; 
+        }
+        // 内部已经到顶了，且滑动距离足够 -> 触发上一页
+        e.preventDefault(); // 防止可能的默认行为干扰
         prevPage();
+        return;
       }
+
+      // 情况 B: 用户向上滑动 (deltaY > 0)，想看下面的内容
+      if (deltaY > 50) {
+        if (!isAtBottom) {
+          // 内部内容还没到底，允许浏览器默认行为（内部滚动），阻止翻页
+          return;
+        }
+        // 内部已经到底了，且滑动距离足够 -> 触发下一页
+        e.preventDefault();
+        nextPage();
+        return;
+      }
+      
+      // 如果滑动距离小于 50px，什么都不做，视为无效滑动或微调
     };
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener('touchstart', handleTouchStart, { passive: true });
-      container.addEventListener('touchend', handleTouchEnd, { passive: true });
-    }
+    // 绑定事件
+    // passive: false 是必须的，否则在需要 preventDefault 时无效
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchend', handleTouchEnd, { passive: false });
 
     return () => {
-      if (container) {
-        container.removeEventListener('touchstart', handleTouchStart);
-        container.removeEventListener('touchend', handleTouchEnd);
-      }
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [nextPage, prevPage, isAnimating]);
+  }, [nextPage, prevPage, isAnimating, currentPage]); // 依赖项必须包含 currentPage
 
   // 键盘事件
   useEffect(() => {

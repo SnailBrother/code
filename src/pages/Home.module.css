@@ -192,6 +192,9 @@
   touch-action: auto;
   transform-origin: top center;
   max-width: 100%;
+   /* 确保内容可以撑开高度 */
+  display: block; 
+  position: relative;
 }
 
 .pageContent h2 {
@@ -483,7 +486,10 @@
   .navCenter {
     display: none;
   }
-
+/* 确保移动端 pageContent 能正确占据剩余空间 */
+  .page {
+    align-items: flex-start; /* 改为从顶部开始，防止居中导致滚动计算错误 */
+  }
   /* 显示汉堡菜单按钮 */
   .menuToggle {
     display: flex;
@@ -537,10 +543,12 @@
     flex-wrap: nowrap;
     
   }
-
+  .pageContent {
+    height: 100dvh; /* 移动端强制占满全屏以便内部滚动 */
+  }
  .page1 {
   margin-top: 0px;
- 
+
 
 }
 

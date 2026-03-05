@@ -6,11 +6,11 @@ const images = [
     id: 1,
     src: '/Picture/home/CompanyProfile/Service.jpg',
     alt: 'Image 1',
-    title: '经营范围',
-    description: '资产评估；房地产评估；土地调查评估服务；物业服务评估；矿业权评估服务；矿产资源储量评估服务；\n' +
-      '社会稳定风险评估；可从事除证券评估业务以外的各类资产评估业务及资产评估咨询业务；\n' +
-      '房地产估价一级；全国范围内从事土地评估业务；司法鉴定。\n' +
-      '（以上范围均按资格证核定范围和期限从事经营）。' 
+    title: ' 服务范围',
+    description: '重庆瑞达是一家具有资产评估、社会稳定风险评估、工程造价、\n' +
+      '土地测绘等资质的大型综合咨询专业服务机构。具有专业服务经验近20年，\n' +
+      '主要为客户提供资产评估、房地产估价、土地估价、国有土地上房屋征收评估、\n' +
+      '社会稳定风险评估、工程造价咨询和管理咨询等专业服务'
   },
   {
     id: 2,
@@ -18,12 +18,13 @@ const images = [
     alt: 'Image 2',
     title: '资质',
     description: '土地估价A级资格\n' +
-    '\n' +
+      '（2012年7月1日取得）\n' +
       '房地产估价一级资格\n' +
-      '\n' +
+      '（2016年7月1日取得）\n' +
       '资产评估综合B级资格\n' +
-      '\n' +
-      '司法鉴定资格'
+      '（2008年2月26日取得）\n' +
+      '司法鉴定资格\n' +
+      '（2011年7月5日取得）'
   },
   {
     id: 3,
@@ -41,9 +42,9 @@ const images = [
     alt: 'Image 4',
     title: '理念与宗旨',
     description: '服务理念：\n' +
-    '坚持“以人为本、质量求生存、信誉求发展、效率求效益”的服务理念。\n' +
+      '坚持“以人为本、质量求生存、信誉求发展、效率求效益”的服务理念。\n' +
       '评估宗旨： \n' +
-      '公平、公正、独立、客观、 \n' + 
+      '公平、公正、独立、客观、 \n' +
       ' 维护当事人的合法权益'
   },
   {
@@ -60,7 +61,7 @@ const images = [
 const CarouselTypeSecond = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  
+
   // --- 新增：触摸滑动相关状态 ---
   const [touchStartX, setTouchStartX] = useState(null);
   const [touchCurrentX, setTouchCurrentX] = useState(null);
@@ -106,7 +107,7 @@ const CarouselTypeSecond = () => {
   };
 
   // --- 新增：触摸事件处理函数 ---
-  
+
   // 触摸开始
   const handleTouchStart = (e) => {
     // 记录起始 X 坐标
@@ -148,7 +149,7 @@ const CarouselTypeSecond = () => {
     setTouchStartX(null);
     setTouchCurrentX(null);
     setIsSwiping(false);
-    
+
     // 恢复自动播放 (会在 useEffect 中触发)
   };
 
@@ -160,13 +161,13 @@ const CarouselTypeSecond = () => {
   }, [currentIndex, isHovering, isSwiping]); // 依赖项加入 isSwiping
 
   return (
-    <div 
-      className={styles['carouseltypesecond-box']} 
-      onMouseEnter={handleMouseEnter} 
+    <div
+      className={styles['carouseltypesecond-box']}
+      onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* 轮播图片区域 - 绑定触摸事件 */}
-      <ul 
+      <ul
         className={styles['carouseltypesecond-ul1']}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -176,8 +177,8 @@ const CarouselTypeSecond = () => {
           <li
             key={img.id}
             className={`${styles['carouseltypesecond-slide']} ${index === currentIndex ? styles['carouseltypesecond-active'] :
-                index === (currentIndex - 1 + images.length) % images.length ? styles['carouseltypesecond-prev'] :
-                  index === (currentIndex + 1) % images.length ? styles['carouseltypesecond-next'] : ''
+              index === (currentIndex - 1 + images.length) % images.length ? styles['carouseltypesecond-prev'] :
+                index === (currentIndex + 1) % images.length ? styles['carouseltypesecond-next'] : ''
               }`}
           >
             <img src={img.src} alt={img.alt} className={styles['carouseltypesecond-img']} />

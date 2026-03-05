@@ -130,6 +130,8 @@ function CodeCheck() {
   return (
     <div className={styles.fullPageBg}>
       <div className={styles.paperContainer}>
+
+
         <div className={styles.paper}>
 
           {/* 二维码区域 - 修改为相对定位容器，以便绝对定位 Logo */}
@@ -191,7 +193,7 @@ function CodeCheck() {
                 <span className={styles.value}>{formatDate(data.ReportTime)}</span>
               </div>
               <div className={styles.infoRow}>
-                <span className={styles.label}>评估机构名称：</span>
+                <span className={styles.label}>评估机构：</span>
                 <span className={styles.value}>重庆瑞达资产评估房地产土地估价有限公司</span>
               </div>
             </div>
@@ -224,12 +226,14 @@ function CodeCheck() {
 
           </div>
 
-        </div>
+       
 
-        <div className={styles.actionBar}>
+        </div>
+ <div className={styles.actionBar}>
           <button onClick={() => window.print()} className={styles.printBtn}>🖨️ 打印</button>
           <Link to="/" className={styles.backBtn}>🏠 首页</Link>
         </div>
+
       </div>
     </div>
   );

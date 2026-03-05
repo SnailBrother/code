@@ -12,7 +12,6 @@ const MessageManagement = () => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // 1. 创建 Socket 连接
     const newSocket = io(SOCKET_URL, {
       transports: ['websocket', 'polling'],
       reconnection: true,
@@ -22,7 +21,6 @@ const MessageManagement = () => {
     
     setSocket(newSocket);
 
-    // 2. 初始加载数据
     const fetchInitialData = async () => {
       try {
         const res = await axios.get(`${SOCKET_URL}/api/CodeDatabase/getMessages`);
@@ -38,68 +36,48 @@ const MessageManagement = () => {
 
     fetchInitialData();
 
-    // 3. Socket 事件监听
-    newSocket.on('connect', () => {
-      setConnectionStatus('connected');
-      console.log('✅ Socket 连接成功, ID:', newSocket.id);
-    });
+    newSocket.on('connect', () => setConnectionStatus('connected'));
+    newSocket.on('disconnect', () => setConnectionStatus('disconnected'));
+    newSocket.on('connect_error', () => setConnectionStatus('error'));
 
-    newSocket.on('disconnect', (reason) => {
-      setConnectionStatus('disconnected');
-      console.log('❌ Socket 断开连接, 原因:', reason);
-    });
-
-    newSocket.on('connect_error', (error) => {
-      console.error('Socket 连接错误:', error);
-      setConnectionStatus('error');
-    });
-
-    // ✅ 监听新消息到达 - 关键部分
+    // 监听新消息
     newSocket.on('new_message_received', (newMessage) => {
-      console.log('📨 收到新消息:', newMessage);
-      
       setMessages(prev => {
-        // 避免重复添加
-        if (prev.some(msg => msg.id === newMessage.id)) {
-          console.log('消息已存在，不重复添加');
-          return prev;
-        }
-        console.log('添加新消息到列表');
+        if (prev.some(msg => msg.id === newMessage.id)) return prev;
         return [newMessage, ...prev];
       });
-
-      // 浏览器通知
       if (Notification.permission === "granted") {
-        new Notification("新留言通知", { 
-          body: `来自 ${newMessage.requestername} 的新消息` 
-        });
+        new Notification("新留言通知", { body: `来自 ${newMessage.requestername} 的新消息` });
       }
     });
 
+    // 监听状态更新
     newSocket.on('message_updated', (updatedData) => {
-      console.log('消息状态更新:', updatedData);
       setMessages(prev => prev.map(msg => 
         msg.id === updatedData.id ? { ...msg, ...updatedData } : msg
       ));
     });
 
-    // 清理
+    // ✅ 新增：监听删除事件
+    newSocket.on('message_deleted', (data) => {
+      console.log('收到删除通知，ID:', data.id);
+      setMessages(prev => prev.filter(msg => msg.id !== data.id));
+    });
+
     return () => {
-      console.log('清理 Socket 连接');
       newSocket.off('connect');
       newSocket.off('disconnect');
       newSocket.off('connect_error');
       newSocket.off('new_message_received');
       newSocket.off('message_updated');
+      newSocket.off('message_deleted'); // 记得清理新事件
       newSocket.disconnect();
     };
-  }, []); // 空依赖数组，只在组件挂载时执行一次
+  }, []);
 
-  // 其余代码保持不变...
   const handleMarkAsRead = async (id) => {
     try {
       await axios.put(`${SOCKET_URL}/api/CodeDatabase/markAsRead/${id}`);
-      // 乐观更新
       setMessages(prev => prev.map(msg => 
         msg.id === id ? { ...msg, isread: 1, responded: new Date().toISOString() } : msg
       ));
@@ -108,16 +86,32 @@ const MessageManagement = () => {
     }
   };
 
+  // ✅ 新增：删除处理函数
+  const handleDelete = async (id) => {
+    if (!window.confirm('确定要永久删除这条留言吗？此操作无法恢复。')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${SOCKET_URL}/api/CodeDatabase/deleteMessage/${id}`);
+      // 乐观更新：先在前端移除，等待 socket 确认或直接移除
+      setMessages(prev => prev.filter(msg => msg.id !== id));
+    } catch (err) {
+      console.error('删除失败:', err);
+      alert('删除失败，请稍后重试');
+      // 如果失败，可能需要重新拉取列表以确保数据一致性
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return '-';
     return new Date(dateString).toLocaleString('zh-CN');
   };
 
-  // 渲染部分保持不变...
   return (
     <div className={styles.managementContainer}>
       <header className={styles.header}>
-        <h2>留言:</h2>
+        <h2>留言管理</h2>
         <div className={styles.statusBadge}>
           连接状态: 
           <span className={`${styles.dot} ${connectionStatus === 'connected' ? styles.online : styles.offline}`}></span>
@@ -160,14 +154,24 @@ const MessageManagement = () => {
                     </td>
                     <td>{formatDate(msg.responded)}</td>
                     <td>
-                      {!msg.isread && (
+                      <div className={styles.actionButtons}>
+                        {!msg.isread && (
+                          <button 
+                            className={styles.markBtn}
+                            onClick={() => handleMarkAsRead(msg.id)}
+                          >
+                            标记已读
+                          </button>
+                        )}
+                        {/* ✅ 新增：删除按钮 */}
                         <button 
-                          className={styles.markBtn}
-                          onClick={() => handleMarkAsRead(msg.id)}
+                          className={styles.deleteBtn}
+                          onClick={() => handleDelete(msg.id)}
+                          title="永久删除"
                         >
-                          标记已读
+                          删除
                         </button>
-                      )}
+                      </div>
                     </td>
                   </tr>
                 ))

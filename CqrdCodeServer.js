@@ -341,7 +341,7 @@ app.get('/api/CodeDatabase/VerifyAndFetch', async (req, res) => {
 
 
 
-// 1. 提交联系表单 (ContactUs 使用)
+// 1. 提交联系表单 (ContactUs 使用) 用户留言
 app.post('/api/CodeDatabase/submitContact', async (req, res) => {
     const { requestername, contact, description } = req.body;
 
@@ -386,7 +386,7 @@ app.post('/api/CodeDatabase/submitContact', async (req, res) => {
     }
 });
 
-// 2. 获取消息列表 (MessageManagement 初始化使用，作为 Socket 的备用或初始加载)
+// 2. 获取消息列表 (MessageManagement 初始化使用，作为 Socket 的备用或初始加载) 管理员查看列表。
 app.get('/api/CodeDatabase/getMessages', async (req, res) => {
     try {
         await poolConnect;
@@ -400,7 +400,7 @@ app.get('/api/CodeDatabase/getMessages', async (req, res) => {
     }
 });
 
-// 3. 标记为已读 (可选功能)
+// 3. 标记为已读 (可选功能) 管理员修改状态。
 app.put('/api/CodeDatabase/markAsRead/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -417,7 +417,39 @@ app.put('/api/CodeDatabase/markAsRead/:id', async (req, res) => {
         res.status(500).json({ success: false, error: err.message });
     }
 });
+ 
 
+// 4. 删除留言 (新增代码)
+app.delete('/api/CodeDatabase/deleteMessage/:id', async (req, res) => {
+    const { id } = req.params;
+    
+    if (!id) {
+        return res.status(400).json({ success: false, message: 'ID 不能为空' });
+    }
+
+    try {
+        await poolConnect;
+        const request = new sql.Request(pool);
+        
+        // 执行删除操作
+        const result = await request
+            .input('id', sql.Int, parseInt(id))
+            .query('DELETE FROM RdpgCode.dbo.CqrdpgBusiness WHERE id = @id');
+
+        // 如果影响行数为 0，说明没找到该 ID
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ success: false, message: '未找到该留言' });
+        }
+
+        // 🔥 实时通知所有前端：这条消息被删除了，需要从列表中移除
+        io.emit('message_deleted', { id: parseInt(id) });
+
+        res.json({ success: true, message: '删除成功' });
+    } catch (err) {
+        console.error('删除消息错误:', err);
+        res.status(500).json({ success: false, message: '服务器内部错误', error: err.message });
+    }
+});
 {//beizhu
 
 }

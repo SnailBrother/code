@@ -1,8 +1,9 @@
+// Service.jsx
 import React from 'react';
 import styles from './Service.module.css';
 
 const Service = () => {
-  const firstRowItems = [
+  const serviceItems = [
     {
       title: '无形资产评估',
       image: '/Picture/home/Dynamic/1.jpg',
@@ -18,15 +19,7 @@ const Service = () => {
         '● 重庆市各级人民法院指定的诉讼司法鉴定评估机构',
         '● 可提供房地产、土地使用权、机器设备、机动车等各项资产的鉴定评估'
       ]
-    }
-  ];
-
-  const mainItem = {
-    title: '服务领域',
-    subtitle: '核心服务'
-  };
-
-  const secondRowItems = [
+    },
     {
       title: '企业价值评估',
       image: '/Picture/home/Dynamic/3.jpg',
@@ -79,21 +72,51 @@ const Service = () => {
   ];
 
   return (
-    <div className={styles['carouseltypeninth-container']}>
-      {/* First Row - Two Hexagons + Text Content */}
-      <div className={styles['carouseltypeninth-first-row']}>
-        <div className={styles['carouseltypeninth-first-row-images']}>
-          {firstRowItems.map((item, index) => (
-            <div key={index} className={styles['carouseltypeninth-first-row-hexagon-item']}>
+    <div className={styles['service-container']}>
+      {/* 桌面端布局 */}
+      <div className={styles['desktop-layout']}>
+        {/* First Row - Two Hexagons + Text Content */}
+        <div className={styles['desktop-first-row']}>
+          <div className={styles['desktop-first-row-images']}>
+            {serviceItems.slice(0, 2).map((item, index) => (
+              <div key={index} className={styles['desktop-hexagon-item']}>
+                <div 
+                  className={styles['desktop-hexagon']} 
+                  style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${item.image})` }}
+                >
+                  <div className={styles['desktop-hexagon-content']}>
+                    <h3 className={styles['desktop-hexagon-title']}>{item.title}</h3>
+                    <div className={styles['desktop-hexagon-description']}>
+                      {item.description.map((desc, idx) => (
+                        <p key={idx} className={styles['desktop-description-item']}>{desc}</p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <div className={styles['desktop-text-content']}>
+            <h2 className={styles['desktop-main-title']}>服务领域</h2>
+            <p className={styles['desktop-main-subtitle']}>核心服务</p>
+            <button className={styles['desktop-more-btn']}>查看更多 &gt;</button>
+          </div>
+        </div>
+
+        {/* Second Row - Four Hexagon Items */}
+        <div className={styles['desktop-second-row']}>
+          {serviceItems.slice(2, 6).map((item, index) => (
+            <div key={index} className={styles['desktop-second-row-item']}>
               <div 
-                className={styles['carouseltypeninth-first-row-hexagon']} 
+                className={styles['desktop-hexagon']} 
                 style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${item.image})` }}
               >
-                <div className={styles['carouseltypeninth-first-row-content']}>
-                  <h3 className={styles['carouseltypeninth-hexagon-title']}>{item.title}</h3>
-                  <div className={styles['carouseltypeninth-hexagon-description']}>
+                <div className={styles['desktop-hexagon-content']}>
+                  <h3 className={styles['desktop-hexagon-title']}>{item.title}</h3>
+                  <div className={styles['desktop-hexagon-description']}>
                     {item.description.map((desc, idx) => (
-                      <p key={idx} className={styles['carouseltypeninth-description-item']}>{desc}</p>
+                      <p key={idx} className={styles['desktop-description-item']}>{desc}</p>
                     ))}
                   </div>
                 </div>
@@ -101,33 +124,34 @@ const Service = () => {
             </div>
           ))}
         </div>
-        
-        <div className={styles['carouseltypeninth-text-content']}>
-          <h2 className={styles['carouseltypeninth-main-title']}>{mainItem.title}</h2>
-          <p className={styles['carouseltypeninth-main-subtitle']}>{mainItem.subtitle}</p>
-          <button className={styles['carouseltypeninth-more-btn']}>查看更多 &gt;</button>
-        </div>
       </div>
 
-      {/* Second Row - Four Hexagon Items */}
-      <div className={styles['carouseltypeninth-second-row']}>
-        {secondRowItems.map((item, index) => (
-          <div key={index} className={styles['carouseltypeninth-second-row-item']}>
-            <div 
-              className={styles['carouseltypeninth-second-row-hexagon']} 
-              style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url(${item.image})` }}
-            >
-              <div className={styles['carouseltypeninth-second-row-content']}>
-                <h3 className={styles['carouseltypeninth-hexagon-title']}>{item.title}</h3>
-                <div className={styles['carouseltypeninth-hexagon-description']}>
-                  {item.description.map((desc, idx) => (
-                    <p key={idx} className={styles['carouseltypeninth-description-item']}>{desc}</p>
-                  ))}
+      {/* 移动端布局 */}
+      <div className={styles['mobile-layout']}>
+        <div className={styles['mobile-header']}>
+          <h2 className={styles['mobile-main-title']}>服务领域</h2>
+          <p className={styles['mobile-main-subtitle']}>核心服务</p>
+        </div>
+        
+        <div className={styles['mobile-scroll-container']}>
+          {serviceItems.map((item, index) => (
+            <div key={index} className={styles['mobile-card']}>
+              <div 
+                className={styles['mobile-card-image']}
+                style={{ backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(${item.image})` }}
+              >
+                <div className={styles['mobile-card-content']}>
+                  <h3 className={styles['mobile-card-title']}>{item.title}</h3>
+                  <div className={styles['mobile-card-description']}>
+                    {item.description.map((desc, idx) => (
+                      <p key={idx} className={styles['mobile-description-item']}>{desc}</p>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

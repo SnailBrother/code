@@ -23,7 +23,7 @@
 /* 标题区域 - 固定不滚动 */
 .headerFixed {
   flex-shrink: 0;
-  padding: 40px 0 20px 0;
+  padding: 10px 0 10px 0;
 }
 
 /* 标题区域 */
@@ -34,7 +34,7 @@
   margin: 0 0 15px 0;
   color: #222222;
   position: relative;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
 }
 
 .sectionTitle::after {
@@ -52,7 +52,7 @@
   font-size: 16px;
   text-align: center;
   color: #666666;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 /* 分类导航 */
@@ -300,7 +300,7 @@
   }
   
   .headerFixed {
-    padding: 30px 0 15px 0;
+    padding: 10px 0 15px 0;
   }
   
   .sectionTitle {

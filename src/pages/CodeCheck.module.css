@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 20px;
+  padding: 5px 20px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   color: #333;
   box-sizing: border-box;
@@ -387,6 +387,61 @@
   100% {
     transform: rotate(360deg);
   }
+}
+@media (max-width: 768px) {
+  .label, 
+  .value,
+  .footer {
+    font-size: 12px;
+  }
+  .infoGrid, .informationContainer {
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+  .label {
+  width: 70px;
+  }
+
+  .paperHeader {
+      padding-bottom: 5px;
+  margin-bottom: 30px;
+
+  }
+.reportTitle {
+  font-size: 15px;
+}
+.informationContainer {
+    margin-top: 10px;
+
+    width: 100%;
+}
+
+.stamp {
+  position: absolute;
+  bottom: 380px;
+  left: 150px;
+  transform: rotate(-15deg);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 10;
+  width: 140px;
+  height: 140px;
+}
+.infoGrid {
+ 
+  gap: 10px;
+
+}
+.infoRow {
+  line-height: 1.2;
+ 
+}
+
+.paper {
+  padding: 40px 20px;
+ 
+}
+
 }
 
 /* 打印适配 */

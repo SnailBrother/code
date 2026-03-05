@@ -4,108 +4,112 @@ import styles from './RdSetting.module.css';
 import MessageManagement from './MessageManagement';
 import QrcodeManagementSettings from './QrcodeManagementSettings';
 
+// 模拟图标组件 (实际项目中建议使用 react-icons 或 svg)
+const Icon = ({ name, className }) => {
+  // 这里用 emoji 或简单字符模拟 font-icon，实际请替换为 <i className={`icon icon-${name}`}></i>
+  const icons = {
+    message: '💬',
+    qrcode: '📱',
+    search: '🔍',
+    add: '➕',
+    gear: '⚙️',
+    collapse: '◀' 
+  };
+  return <span className={className}>{icons[name] || ''}</span>;
+};
+
 const AVATAR_URL = '/RuidaLogo.jpg';
-const ROTATING_TEXT = "重庆瑞达留言管理系统";
+const USER_NAME = "瑞达管理员";
+const MENU_ITEMS = [
+  { id: 'message', label: '留言管理', icon: 'message' },
+  { id: 'qrcode', label: '二维码设置', icon: 'qrcode' },
+];
 
 const RdSetting = () => {
-    const [searchValue, setSearchValue] = useState('');
-    // 定义当前激活的菜单项，默认显示 'message' (留言)
-    const [activeTab, setActiveTab] = useState('message');
+  const [activeTab, setActiveTab] = useState('message');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
 
-    return (
-        <div className={styles.settingContainer}>
-            {/* 左侧个人信息栏 */}
-            <aside className={styles.sidebar}>
+  // 处理菜单点击
+  const handleMenuClick = (id) => {
+    setActiveTab(id);
+  };
 
-                {/* --- 旋转文字与头像区域 (保持不变) --- */}
-                <div className={styles.rotateWrapper}>
-                    <div className={styles.textCircle}>
-                        {ROTATING_TEXT.split('').map((char, index) => {
-                            const totalChars = ROTATING_TEXT.length;
-                            const angle = (360 / totalChars) * index;
-                            const radius = 80; 
-                            return (
-                                <span
-                                    key={index}
-                                    className={styles.circleChar}
-                                    style={{
-                                        transform: `rotate(${angle}deg) translateY(-${radius}px)`
-                                    }}
-                                >
-                                    {char}
-                                </span>
-                            );
-                        })}
-                    </div>
-                    <div className={styles.avatarWrapper}>
-                        <img src={AVATAR_URL} alt="个人头像" className={styles.avatar} />
-                    </div>
-                </div>
-                {/* --- 旋转区域结束 --- */}
+  // 处理侧边栏折叠
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
+  };
 
-                {/* --- 新增：左侧导航菜单 --- */}
-                <nav className={styles.navMenu}>
-                    <button 
-                        className={`${styles.navItem} ${activeTab === 'message' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('message')}
-                    >
-                        <span className={styles.navIcon}>💬</span>
-                        <span className={styles.navText}>留言管理</span>
-                    </button>
+  // 获取当前激活的标签文本
+  const currentTagLabel = MENU_ITEMS.find(item => item.id === activeTab)?.label || '设置';
 
-                    <button 
-                        className={`${styles.navItem} ${activeTab === 'qrcode' ? styles.active : ''}`}
-                        onClick={() => setActiveTab('qrcode')}
-                    >
-                        <span className={styles.navIcon}>📱</span>
-                        <span className={styles.navText}>二维码设置</span>
-                    </button>
-                </nav>
-                {/* --- 导航菜单结束 --- */}
+  return (
+    <div className={styles.container}>
+      {/* 左侧导航栏 */}
+      <aside className={`${styles.leftBox} ${isSidebarCollapsed ? styles.collapsed : ''}`}>
+        <ul className={styles.navList}>
+          {MENU_ITEMS.map((item) => (
+            <li
+              key={item.id}
+              className={`${styles.navItem} ${activeTab === item.id ? styles.active : ''}`}
+              onClick={() => handleMenuClick(item.id)}
+              title={item.label} // 折叠时显示 tooltip
+            >
+              <Icon name={item.icon} className={styles.navIcon} />
+              <span className={styles.navText}>{item.label}</span>
+            </li>
+          ))}
+          
+          {/* 分割线 */}
+          <hr className={styles.divider} />
+          
+          {/* 可以在这里添加更多系统级菜单，如“传输列表” */}
+          <li className={styles.navItem} title="系统日志">
+             <Icon name="gear" className={styles.navIcon} />
+             <span className={styles.navText}>系统日志</span>
+          </li>
+        </ul>
 
-            </aside>
-
-            {/* 右侧主内容区 */}
-            <main className={styles.mainContent}>
-                {/* 顶部搜索栏 (保持不变) */}
-                <div className={styles.searchBar}>
-                    <div className={styles.searchInputWrapper}>
-                        <span className={styles.searchPrefix}>BING</span>
-                        <input
-                            type="text"
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            placeholder="请输入搜索内容..."
-                            className={styles.searchInput}
-                        />
-                        <button className={styles.searchBtn}>🔍</button>
-                    </div>
-
-                    <div className={styles.timeInfo}>
-                        {new Date().toLocaleString('zh-CN', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            second: '2-digit',
-                            weekday: 'long'
-                        }).replace(/\//g, '-')}
-                    </div>
-                </div>
-
-                {/* 下方内容区 - 根据 activeTab 动态渲染 */}
-                <div className={styles.tableContainer}>
-                    {activeTab === 'message' && (
-                        <MessageManagement />
-                    )}
-                    {activeTab === 'qrcode' && (
-                        <QrcodeManagementSettings />
-                    )}
-                </div>
-            </main>
+        {/* 底部用户信息 */}
+        <div className={styles.userInfo}>
+          <img src={AVATAR_URL} alt="Avatar" className={styles.userAvatar} onError={(e) => e.target.src='https://via.placeholder.com/32'} />
+          {!isSidebarCollapsed && <span className={styles.userName}>{USER_NAME}</span>}
+          {!isSidebarCollapsed && <Icon name="gear" className={styles.userIcon} />}
         </div>
-    );
+      </aside>
+
+      {/* 右侧主内容区 */}
+      <main className={styles.rightBox}>
+        {/* 顶部操作栏 */}
+        <header className={styles.topBar}>
+          <span className={styles.currentTag}>{currentTagLabel}</span>
+          <div className={styles.actionBtns}>
+            <div className={styles.btn}>
+              <Icon name="search" className={styles.btnIcon} />
+            </div>
+            <div className={`${styles.btn} ${styles.btnAdd}`}>
+              <Icon name="add" className={styles.btnIcon} />
+            </div>
+          </div>
+        </header>
+
+        {/* 内容区域 */}
+        <div className={styles.contentArea}>
+          {activeTab === 'message' && <MessageManagement />}
+          {activeTab === 'qrcode' && <QrcodeManagementSettings />}
+        </div>
+
+        {/* 侧边栏折叠控制器 (悬浮在右侧区域左边缘) */}
+        <div 
+          className={`${styles.handler} ${isSidebarCollapsed ? styles.closed : ''}`} 
+          onClick={toggleSidebar}
+          title={isSidebarCollapsed ? "展开菜单" : "收起菜单"}
+        >
+          {/* CSS 伪元素绘制箭头 */}
+        </div>
+      </main>
+    </div>
+  );
 };
 
 export default RdSetting;
